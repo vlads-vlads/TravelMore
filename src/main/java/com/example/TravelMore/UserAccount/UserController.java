@@ -1,20 +1,20 @@
 package com.example.TravelMore.UserAccount;
-import com.example.TravelMore.util.JwtTokenUtil;
+
 import com.example.TravelMore.model.LoginRequest;
+import com.example.TravelMore.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "travelMore")
-
 public class UserController {
 
     private final UserService userService;
-
     private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
@@ -25,32 +25,60 @@ public class UserController {
 
     @PostMapping(path = "/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
-         User newUser = userService.createUser(user);
+        User newUser = userService.createUser(user);
         return ResponseEntity.ok().body(newUser);
     }
 
     @GetMapping(path = "/users/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable("userId") Long userId) {
-        User user = userService.getUserById(userId);
-        if (user != null) {
-            return ResponseEntity.ok().body(user);
+    public ResponseEntity<User> getUserById(@PathVariable("userId") Long userId, @RequestHeader(name = "Authorization") String token) {
+        if (jwtTokenUtil.validateToken(token, userId)) {
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(token);
+            if (userId.equals(authenticatedUserId)) {
+                User user = userService.getUserById(userId);
+                if (user != null) {
+                    return ResponseEntity.ok().body(user);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @DeleteMapping(path = "/users/{userId}")
-    public void deleteAccount(@PathVariable("userId") Long accountId) {
-        userService.deleteUser(accountId);
+    public ResponseEntity<String> deleteAccount(@PathVariable("userId") Long userId, @RequestHeader(name = "Authorization") String token) {
+        if (jwtTokenUtil.validateToken(token, userId)) {
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(token);
+            if (userId.equals(authenticatedUserId)) {
+                userService.deleteUser(userId);
+                return ResponseEntity.ok().body("User deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
     }
 
     @PutMapping(path = "/users/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable("userId") Long userId, @RequestBody User userUpdates) {
-        User updatedUser = userService.updateUser(userId, userUpdates);
-        if (updatedUser != null) {
-            return ResponseEntity.ok().body(updatedUser);
+    public ResponseEntity<User> updateUser(@PathVariable("userId") Long userId, @RequestBody User userUpdates, @RequestHeader(name = "Authorization") String token) {
+        if (jwtTokenUtil.validateToken(token, userId)) {
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(token);
+            if (userId.equals(authenticatedUserId)) {
+                User updatedUser = userService.updateUser(userId, userUpdates);
+                if (updatedUser != null) {
+                    return ResponseEntity.ok().body(updatedUser);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
@@ -63,7 +91,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         User user = userService.authenticateUser(loginRequest);
         if (user != null) {
-            String token = jwtTokenUtil.generateToken(user);
+            String token = jwtTokenUtil.generateToken(user.getUserId());
             return ResponseEntity.ok().body(token);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username/password");
