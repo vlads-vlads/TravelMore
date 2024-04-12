@@ -51,13 +51,13 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{postId}")
+    @PostMapping("/{tripId}")
     public ResponseEntity<Comment> createComment(@PathVariable Long tripId, @Valid @RequestBody Comment comment) {
         Comment savedComment = commentService.saveComment(comment, tripId);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{postId}")
+    @GetMapping("/{tripId}")
     public ResponseEntity<List<Comment>> getCommentsForTrip(@PathVariable Long tripId) {
         List<Comment> comments = commentService.getCommentsForTrip(tripId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
