@@ -1,6 +1,7 @@
 package com.example.TravelMore.Comment;
 
 import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.trip.Trip;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -32,8 +33,8 @@ public class Comment {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
 
     @Column(nullable = false)
     @CreatedDate
@@ -56,10 +57,10 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String content, User user, Post post) {
+    public Comment(String content, User user, Trip trip) {
         this.content = content;
         this.user = user;
-        this.post = post;
+        this.trip = trip;
     }
 
     public long getId() {return id;}
@@ -74,9 +75,9 @@ public class Comment {
 
     public void setUser(User user) {this.user = user;}
 
-    public Post getPost() {return post;}
+    public Trip getTrip() {return trip;}
 
-    public void setPost(Post post) {this.post = post;}
+    public void setTrip(Trip trip) {this.trip = trip;}
 
     public LocalDateTime getCreatedAt() {return createdAt;}
 

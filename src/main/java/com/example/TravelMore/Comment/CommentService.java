@@ -1,5 +1,7 @@
 package com.example.TravelMore.Comment;
 
+import com.example.TravelMore.trip.Trip;
+import com.example.TravelMore.trip.TripService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,31 +14,31 @@ import java.util.Optional;
 public class CommentService {
 
     private final com.example.TravelMore.Comment.CommentRepository commentRepository;
-    private final PostService postService;
+    private final TripService tripService;
 
     @Autowired
-    public CommentService(com.example.TravelMore.Comment.CommentRepository commentRepository, PostService postService) {
+    public CommentService(com.example.TravelMore.Comment.CommentRepository commentRepository, TripService tripService) {
         this.commentRepository = commentRepository;
-        this.postService = postService;
+        this.tripService = tripService;
     }
 
 
-    public Comment saveComment(@Valid Comment comment, Long postId) {
+    public Comment saveComment(@Valid Comment comment, Long tripId) {
         LocalDateTime now = LocalDateTime.now();
         if (comment.getCreatedAt() == null) {
             comment.setCreatedAt(now);
         }
         comment.setLastModifiedAt(now);
-        Post post = postService.getPostById(postId);
-        comment.setPost(post);
+        Trip trip = tripService.getTripById(tripId);
+        comment.setTrip(trip);
         return commentRepository.save(comment);
     }
 
-    public List<Comment> getAllComments() {
+    public List<Comment> getAllComments() { // retrieves all comm from databse using JPA interface
         return commentRepository.findAll();
     }
 
-    public Optional<Comment> getCommentById(Long id) {
+    public Optional<Comment> getCommentById(Long id) { // retrieved 1 comment by Id, Optional is a cotainer that can be empty or not , if a comm with id exists the method returns comm, if not returns empty
         return commentRepository.findById(id);
     }
 
@@ -52,7 +54,7 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public List<Comment> getCommentsForPost(Long postId) {
-        return commentRepository.findByPostId(postId);
+    public List<Comment> getCommentsForTrip(Long trip_id) {
+        return commentRepository.findByTripId(trip_id);
     }
 }

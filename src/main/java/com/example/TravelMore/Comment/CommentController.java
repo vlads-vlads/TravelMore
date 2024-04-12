@@ -30,8 +30,8 @@ public class CommentController {
     @GetMapping("/{id}")
     public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
         return commentService.getCommentById(id)
-                .map(comment -> new ResponseEntity<>(comment, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -52,14 +52,14 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<Comment> createComment(@PathVariable Long postId, @Valid @RequestBody Comment comment) {
-        Comment savedComment = commentService.saveComment(comment, postId);
+    public ResponseEntity<Comment> createComment(@PathVariable Long tripId, @Valid @RequestBody Comment comment) {
+        Comment savedComment = commentService.saveComment(comment, tripId);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<List<Comment>> getCommentsForPost(@PathVariable Long postId) {
-        List<Comment> comments = commentService.getCommentsForPost(postId);
+    public ResponseEntity<List<Comment>> getCommentsForTrip(@PathVariable Long tripId) {
+        List<Comment> comments = commentService.getCommentsForTrip(tripId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 }
