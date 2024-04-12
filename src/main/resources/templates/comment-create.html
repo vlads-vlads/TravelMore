@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Comment</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Write A Comment For This Trip</h2>
+    <form th:action="@{/api/comments/{tripId}(tripId=${tripId})}" th:object="${comment}" method="post">
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea class="form-control" id="content" rows="5" th:field="*{content}" placeholder="Enter your comment here..."></textarea>
+        </div>
+        <input type="hidden" th:field="*{tripId}" th:value="${tripId}" />
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> <!--myb not needed -->
+        <button type="submit" class="btn btn-primary">Post Comment</button>
+    </form>
+</div>
+
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.9/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> myb later -->
+
+</body>
+</html>
