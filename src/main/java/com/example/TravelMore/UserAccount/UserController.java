@@ -25,8 +25,12 @@ public class UserController {
 
     @PostMapping(path = "/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User newUser = userService.createUser(user);
-        return ResponseEntity.ok().body(newUser);
+        try {
+            User newUser = userService.createUser(user);
+            return ResponseEntity.ok().body(newUser);
+        } catch (IllegalArgumentException  | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @GetMapping(path = "/users/{userId}")

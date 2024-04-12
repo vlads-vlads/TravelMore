@@ -20,13 +20,19 @@ public class UserService {
 
 
     public User createUser(User user) {
-        Optional<User> userById = userRepository.findUserByUserEmail(user.getUserEmail());
-        if (userById.isPresent()) {
-            throw new IllegalStateException("email taken");
+        Optional<User> userByEmail = userRepository.findUserByUserEmail(user.getUserEmail());
+        if (userByEmail.isPresent()) {
+            throw new IllegalStateException("Email address is already registered.");
+        }
+        String password = user.getUserPassword();
+        if (password == null || password.length() < 8 || !isPasswordComplex(password)) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long and contain " +
+                    "at least one uppercase letter, one lowercase letter, one digit, and one special character.");
         }
 
-        String hashedPassword = passwordEncoder.encode(user.getUserPassword());
+        String hashedPassword = passwordEncoder.encode(password);
         user.setUserPassword(hashedPassword);
+
         userRepository.save(user);
         return user;
     }
@@ -68,8 +74,13 @@ public class UserService {
     }
 
     public User authenticateUser(LoginRequest loginRequest) {
-        Optional<User> optionalUser = userRepository.findUserByUserEmail(loginRequest.getEmail());
-        return optionalUser.filter(user -> passwordEncoder.matches(loginRequest.getPassword(), user.getUserPassword()))
+        Optional<User> optionalUser = userRepository.findUserByUserEmail(loginRequest.getUserEmail());
+        return optionalUser.filter(user -> passwordEncoder.matches(loginRequest.getUserPassword(), user.getUserPassword()))
                 .orElse(null);
+    }
+
+    private boolean isPasswordComplex(String password) {
+        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        return password.matches(passwordRegex);
     }
 }
