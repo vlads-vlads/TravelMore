@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Participant</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Add Participant</h2>
+  <form th:action="@{'/trip-participants/' + ${trip.id} + '/add'}" method="post">
+    <div class="form-group">
+      <label for="userId">Select User:</label>
+      <select id="userId" name="userId" class="form-control">
+        <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.userName}"></option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Participant</button>
+    <a th:href="@{'/trip-participants/' + ${trip.id} + '/participants'}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+</body>
+</html>

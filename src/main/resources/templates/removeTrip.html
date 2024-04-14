@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Remove Trip</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Remove Trip</h2>
+    <p>Are you sure you want to remove this trip?</p>
+
+    <div class="alert alert-warning" role="alert">
+        <strong>Warning!</strong> This action cannot be undone.
+    </div>
+
+    <form th:action="@{'/trips/' + ${trip.id} + '/remove'}" method="post">
+        <button type="submit" class="btn btn-danger">Remove</button>
+        <a href="/trips/all" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

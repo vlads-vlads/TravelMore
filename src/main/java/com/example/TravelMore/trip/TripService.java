@@ -1,19 +1,23 @@
 package com.example.TravelMore.trip;
 
 import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.UserAccount.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TripService {
 
     private final TripRepository tripRepository;
+    private final UserService userService;
 
     @Autowired
-    public TripService(TripRepository tripRepository) {
+    public TripService(TripRepository tripRepository, UserService userService) {
         this.tripRepository = tripRepository;
+        this.userService = userService;
     }
 
     public Trip addTrip(Trip trip) {
@@ -54,4 +58,5 @@ public class TripService {
         return tripRepository.findById(tripId)
                 .orElseThrow(() -> new IllegalArgumentException("Trip with ID " + tripId + " not found"));
     }
+
 }
