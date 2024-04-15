@@ -154,8 +154,6 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" th:href="@{/profile}">Profile</a>
-                        <a class="dropdown-item" th:href="@{/myPostedTrips}">My Posts</a>
-                        <a class="dropdown-item" th:href="@{/planATrip}">Plan a Trip</a>
                         <a class="dropdown-item" th:href="@{/upcomingTrips}">Upcoming Trips</a>
                         <a class="dropdown-item" th:href="@{/pastTrips}">Past Trips</a>
                         <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
@@ -167,42 +165,63 @@
 </nav>
 
 <div class="main-container">
-    <button class="btn btn-primary btn-post-trip">Share a Trip</button>
+    <button class="btn btn-primary btn-post-trip" data-toggle="modal" data-target="#shareTripModal">
+        Add a Trip
+    </button>
+</div>
+<div class="modal fade" id="shareTripModal" tabindex="-1" role="dialog" aria-labelledby="shareTripModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareTripModalLabel">Add Your Trip</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="shareTripForm" th:action="@{/trips/add}" method="post">
+                    <input type="hidden" name="creator" th:value="${user.getUserId()}">
+                    <div class="form-group">
+                        <label for="tripName">Destination</label>
+                        <select class="form-control" id="tripName">
+                            <option value="Spain">Spain</option>
+                            <option value="Germany">Germany</option>
+                            <option value="Italy">Italy</option>
+                            <option value="Greece">Greece</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tripDate">Start Date</label>
+                        <input type="text" class="form-control" id="tripDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="tripEndDate">End Date</label>
+                        <input type="text" class="form-control" id="tripEndDate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" form="shareTripForm">Add</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div th:each="trip : ${trips}" class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">User Name</h5>
-                    <p class="card-text">Japan, Tokyo</p>
-                    <p class="card-text">2025.08.12</p>
+                    <h5 class="card-title" th:text="${user.getUserName()}">Username</h5>
+                    <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+                    <p class="card-text" th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Date</p>
                 </div>
             </div>
-        </div>
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">User Name</h5>
-                    <p class="card-text">England, London</p>
-                    <p class="card-text">2024.09.10</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="card">
-<!--                <img src="image_url" class="card-img-top" alt="Trip Image">-->
-                <div class="card-body">
-                    <h5 class="card-title">User Name</h5>
-                    <p class="card-text">France, Paris </p>
-                    <p class="card-text">2026.03.07</p>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
+
 
 <div class="footer">
     <a href="#" class="fa fa-instagram"></a>
