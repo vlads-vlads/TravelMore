@@ -2,6 +2,7 @@ package com.example.TravelMore.trip;
 
 import com.example.TravelMore.UserAccount.User;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -23,8 +24,10 @@ public class Trip {
 
     private String destination;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     @ManyToMany

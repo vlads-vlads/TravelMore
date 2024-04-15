@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Trip Participants</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Trip Participants</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>User ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <!-- Add more fields as needed -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Display trip participants here -->
+    <tr th:each="participant : ${participants}">
+      <td th:text="${participant.user.userId}"></td>
+      <td th:text="${participant.user.userName}"></td>
+      <td th:text="${participant.user.userEmail}"></td>
+      <!-- Add more fields as needed -->
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
