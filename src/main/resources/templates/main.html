@@ -183,7 +183,7 @@
                     <input type="hidden" name="creator" th:value="${user.getUserId()}">
                     <div class="form-group">
                         <label for="tripName">Destination</label>
-                        <select class="form-control" id="tripName">
+                        <select class="form-control" id="tripName" name="destination">
                             <option value="Spain">Spain</option>
                             <option value="Germany">Germany</option>
                             <option value="Italy">Italy</option>
@@ -192,11 +192,11 @@
                     </div>
                     <div class="form-group">
                         <label for="tripDate">Start Date</label>
-                        <input type="text" class="form-control" id="tripDate">
+                        <input type="date" class="form-control" id="tripDate" name="startDate">
                     </div>
                     <div class="form-group">
                         <label for="tripEndDate">End Date</label>
-                        <input type="text" class="form-control" id="tripEndDate">
+                        <input type="date" class="form-control" id="tripEndDate" name="endDate">
                     </div>
                 </form>
             </div>

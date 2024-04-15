@@ -47,7 +47,7 @@ public class TripController {
             trip.setEndDate(endDate);
 
             tripService.addTrip(trip);
-            return "redirect:http://localhost:8080/trips/all";
+            return "redirect:http://localhost:8080/main";
         } catch (ParseException e) {
             return "error";
         }
