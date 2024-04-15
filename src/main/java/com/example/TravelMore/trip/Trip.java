@@ -19,7 +19,7 @@ public class Trip {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "creator_id")
+    @JoinColumn(name = "user_id")
     private User creator;
 
     private String destination;

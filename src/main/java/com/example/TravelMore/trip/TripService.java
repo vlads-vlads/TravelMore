@@ -59,4 +59,8 @@ public class TripService {
                 .orElseThrow(() -> new IllegalArgumentException("Trip with ID " + tripId + " not found"));
     }
 
+    public List<Trip> getTripsByCreatorId(User creator) {
+        return tripRepository.findByCreator(creator);
+    }
+
 }

@@ -1,5 +1,4 @@
 package com.example.TravelMore.UserAccount;
-
 import com.example.TravelMore.model.LoginRequest;
 import com.example.TravelMore.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +7,11 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/gittravelMore")
+@RequestMapping(path = "api/travelMore")
 public class UserController {
 
     private final UserService userService;
