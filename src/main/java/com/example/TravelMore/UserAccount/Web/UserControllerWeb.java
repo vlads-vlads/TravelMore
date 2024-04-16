@@ -107,7 +107,7 @@ public class UserControllerWeb {
     public String login(@ModelAttribute("loginRequest") LoginRequest loginRequest, Model model) {
         User user = userService.authenticateUser(loginRequest);
         if (user != null) {
-            String token = jwtTokenUtil.generateToken(user.getUserId());
+            String token = jwtTokenUtil.generateToken(user.getId());
             model.addAttribute("token", token);
             return "userAccount";
         } else {

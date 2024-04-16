@@ -15,8 +15,7 @@ public class User {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-
-    private long userId;
+    private Long id;
 
     private String userName;
 
@@ -35,9 +34,8 @@ public class User {
     }
 
 
-
-    public long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     public String getUserName() {

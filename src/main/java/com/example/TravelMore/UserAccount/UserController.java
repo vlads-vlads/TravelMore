@@ -95,7 +95,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         User user = userService.authenticateUser(loginRequest);
         if (user != null) {
-            String token = jwtTokenUtil.generateToken(user.getUserId());
+            String token = jwtTokenUtil.generateToken(user.getId());
             return ResponseEntity.ok().body(token);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username/password");

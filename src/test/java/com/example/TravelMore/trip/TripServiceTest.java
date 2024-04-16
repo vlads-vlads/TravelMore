@@ -115,4 +115,63 @@ class TripServiceTest {
         assertNotNull(foundTrip);
         assertEquals(trip, foundTrip);
     }
+
+    @Test
+    void testAddParticipantToTrip_WhenTripNotFound() {
+        // Arrange
+        Long tripId = 1L;
+        when(tripRepository.findById(tripId)).thenReturn(Optional.empty());
+        User participant = new User();
+
+        // Act and Assert
+        assertThrows(RuntimeException.class, () -> tripService.addParticipantToTrip(tripId, participant));
+    }
+
+    @Test
+    void testAddParticipantToTrip_WhenParticipantAlreadyInTrip() {
+        // Arrange
+        Long tripId = 1L;
+        Trip trip = new Trip();
+        List<User> participants = new ArrayList<>();
+        User participant = new User();
+        participants.add(participant);
+        trip.setParticipants(participants);
+
+        when(tripRepository.findById(tripId)).thenReturn(Optional.of(trip));
+
+        // Act and Assert
+        assertThrows(IllegalArgumentException.class, () -> tripService.addParticipantToTrip(tripId, participant));
+    }
+
+
+    @Test
+    void testGetTripsByCreatorId_WithTripsFound() {
+        // Arrange
+        User creator = mock(User.class);
+        List<Trip> expectedTrips = new ArrayList<>();
+        expectedTrips.add(new Trip());
+        when(tripRepository.findByCreator(creator)).thenReturn(expectedTrips);
+
+        // Act
+        List<Trip> actualTrips = tripService.getTripsByCreatorId(creator);
+
+        // Assert
+        assertNotNull(actualTrips);
+        assertEquals(expectedTrips.size(), actualTrips.size());
+    }
+
+    @Test
+    void testGetTripsByCreatorId_WithNoTripsFound() {
+        // Arrange
+        User creator = mock(User.class);
+        when(tripRepository.findByCreator(creator)).thenReturn(new ArrayList<>());
+
+        // Act
+        List<Trip> actualTrips = tripService.getTripsByCreatorId(creator);
+
+        // Assert
+        assertNotNull(actualTrips);
+        assertTrue(actualTrips.isEmpty());
+    }
+
 }

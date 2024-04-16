@@ -39,7 +39,7 @@ public class MainController {
 
         User user = userService.authenticateUser(loginRequest);
         if (user != null) {
-            String token = jwtTokenUtil.generateToken(user.getUserId());
+            String token = jwtTokenUtil.generateToken(user.getId());
             Cookie cookie = new Cookie("authToken", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);

@@ -29,18 +29,18 @@ public class TripParticipantController {
     @GetMapping("/{tripId}/add")
     public String showAddParticipantForm(@PathVariable Long tripId, Model model) {
         Trip trip = tripService.getTripById(tripId);
-        List<User> users = userService.getUsers(); // Use UserService to get all users
+        List<User> users = userService.getUsers();
         model.addAttribute("trip", trip);
         model.addAttribute("users", users);
-        return "addParticipant"; // Assuming you have a view named "addParticipant"
+        return "addParticipant";
     }
 
     @PostMapping("/{tripId}/add")
     public String addParticipantToTrip(@PathVariable Long tripId, @RequestParam Long userId) {
         Trip trip = tripService.getTripById(tripId);
-        User participant = userService.getUserById(userId); // Use UserService to get user by ID
+        User participant = userService.getUserById(userId);
         tripParticipantService.addParticipantToTrip(trip, participant);
-        return "redirect:/trip-participants/" + tripId + "/participants"; // Redirect to the list of participants
+        return "redirect:/trip-participants/" + tripId + "/participants";
     }
 
     @GetMapping("/{tripId}/participants")
@@ -49,7 +49,14 @@ public class TripParticipantController {
         List<TripParticipant> participants = tripParticipantService.getParticipantsByTrip(trip);
         model.addAttribute("trip", trip);
         model.addAttribute("participants", participants);
-        return "tripParticipants"; // Assuming you have a view named "tripParticipants"
+        return "tripParticipants";
+    }
+
+    @GetMapping("/{tripId}/remove/{participantId}")
+    public String removeParticipantFromTrip(@PathVariable Long tripId, @PathVariable Long participantId) {
+        Trip trip = tripService.getTripById(tripId);
+        tripParticipantService.removeParticipantFromTrip(trip, participantId);
+        return "redirect:/trip-participants/" + tripId + "/participants";
     }
 
 }

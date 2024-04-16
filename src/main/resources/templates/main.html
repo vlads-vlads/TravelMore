@@ -39,7 +39,7 @@
             transition: opacity 0.5s linear;
 }
         .navbar {
-            background-color: #ffffff;
+            background-color: #f8f9fa;
             padding-top: 0;
             padding-bottom: 0;
             position: relative;
@@ -180,7 +180,7 @@
             </div>
             <div class="modal-body">
                 <form id="shareTripForm" th:action="@{/trips/add}" method="post">
-                    <input type="hidden" name="creator" th:value="${user.getUserId()}">
+                    <input type="hidden" name="creator" th:value="${user.getId()}">
                     <div class="form-group">
                         <label for="tripName">Destination</label>
                         <select class="form-control" id="tripName" name="destination">

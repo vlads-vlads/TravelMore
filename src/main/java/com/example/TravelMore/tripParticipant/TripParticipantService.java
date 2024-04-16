@@ -32,4 +32,13 @@ public class TripParticipantService {
         return tripParticipantRepository.findByTripId(trip.getId());
     }
 
+    public void removeParticipantFromTrip(Trip trip, Long participantId) {
+        TripParticipant tripParticipant = tripParticipantRepository.findByTripIdAndUserId(trip.getId(), participantId);
+        if (tripParticipant != null) {
+            tripParticipantRepository.delete(tripParticipant);
+        } else {
+            throw new IllegalArgumentException("Participant is not associated with the trip.");
+        }
+    }
+
 }

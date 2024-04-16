@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remove Participant from Trip</title>
+</head>
+<body>
+<h2>Remove Participant from Trip</h2>
+<form action="/trip-participants/{tripId}/remove" method="POST">
+  <label for="participantId">Participant ID:</label>
+  <input type="number" id="participantId" name="participantId" required>
+  <input type="submit" value="Remove Participant">
+</form>
+</body>
+</html>

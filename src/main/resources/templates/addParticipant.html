@@ -12,7 +12,7 @@
     <div class="form-group">
       <label for="userId">Select User:</label>
       <select id="userId" name="userId" class="form-control">
-        <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.userName}"></option>
+        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.userName}"></option>
       </select>
     </div>
     <button type="submit" class="btn btn-primary">Add Participant</button>

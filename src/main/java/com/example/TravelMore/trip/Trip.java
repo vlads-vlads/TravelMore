@@ -30,15 +30,10 @@ public class Trip {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "trip_participants", joinColumns = @JoinColumn(name = "trip_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> participants;
 
-
-/*
-    private List<Photo> photos;
-    private List<Comment> comments;
-*/
 
     public Trip() {
     }
@@ -62,6 +57,10 @@ public class Trip {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
