@@ -39,4 +39,11 @@ public class TripParticipantRestController {
         return new ResponseEntity<>(participants, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{tripId}/remove/{participantId}")
+    public ResponseEntity<?> removeParticipantFromTrip(@PathVariable Long tripId, @PathVariable Long participantId) {
+        Trip trip = tripService.getTripById(tripId);
+        tripParticipantService.removeParticipantFromTrip(trip, participantId);
+        return ResponseEntity.ok().build();
+    }
+
 }

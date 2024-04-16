@@ -15,16 +15,13 @@
       <th>User ID</th>
       <th>Name</th>
       <th>Email</th>
-      <!-- Add more fields as needed -->
     </tr>
     </thead>
     <tbody>
-    <!-- Display trip participants here -->
     <tr th:each="participant : ${participants}">
-      <td th:text="${participant.user.userId}"></td>
+      <td th:text="${participant.user.id}"></td>
       <td th:text="${participant.user.userName}"></td>
       <td th:text="${participant.user.userEmail}"></td>
-      <!-- Add more fields as needed -->
     </tr>
     </tbody>
   </table>

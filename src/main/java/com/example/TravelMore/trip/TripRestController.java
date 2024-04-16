@@ -1,23 +1,33 @@
 package com.example.TravelMore.trip;
 
+import com.example.TravelMore.Comment.Comment;
+import com.example.TravelMore.Comment.CommentService;
 import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.tripParticipant.TripParticipant;
+import com.example.TravelMore.tripParticipant.TripParticipantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/trips")
 public class TripRestController {
 
     private final TripService tripService;
+    private final TripParticipantService tripParticipantService;
+    private final CommentService commentService;
 
     @Autowired
-    public TripRestController(TripService tripService) {
+    public TripRestController(TripService tripService, TripParticipantService tripParticipantService, CommentService commentService) {
         this.tripService = tripService;
+        this.tripParticipantService = tripParticipantService;
+        this.commentService = commentService;
     }
 
     @PostMapping("/add")
@@ -51,8 +61,22 @@ public class TripRestController {
     }
 
     @GetMapping("/{tripId}")
-    public ResponseEntity<Trip> getTripById(@PathVariable Long tripId) {
+    public ResponseEntity<Map<String, Object>> showTripDetails(@PathVariable Long tripId) {
         Trip trip = tripService.getTripById(tripId);
-        return new ResponseEntity<>(trip, HttpStatus.OK);
+
+        if (trip == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<TripParticipant> participants = tripParticipantService.getParticipantsByTrip(trip);
+        List<Comment> comments = commentService.getCommentsForTrip(tripId);
+
+        Map<String, Object> tripDetails = new HashMap<>();
+        tripDetails.put("trip", trip);
+        tripDetails.put("participants", participants);
+        tripDetails.put("comments", comments);
+
+        return new ResponseEntity<>(tripDetails, HttpStatus.OK);
     }
+
 }

@@ -43,10 +43,17 @@ public class TripService {
 
     public Trip addParticipantToTrip(Long tripId, User participant) {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new RuntimeException("Trip not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Trip not found"));
+
         List<User> participants = trip.getParticipants();
+
+        if (participants.contains(participant)) {
+            throw new IllegalArgumentException("Participant is already in the trip");
+        }
+
         participants.add(participant);
         trip.setParticipants(participants);
+
         return tripRepository.save(trip);
     }
 
