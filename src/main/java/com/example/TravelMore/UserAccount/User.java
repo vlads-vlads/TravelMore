@@ -15,7 +15,9 @@ public class User {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    private Long id;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     private String userName;
 
@@ -35,7 +37,7 @@ public class User {
 
 
     public Long getId() {
-        return id;
+        return userId;
     }
 
     public String getUserName() {
