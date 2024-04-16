@@ -29,7 +29,7 @@ public class UserControllerWeb {
         try {
             User newUser = userService.createUser(user);
             model.addAttribute("user", newUser);
-            return "login";
+            return "index";
         } catch (IllegalArgumentException | IllegalStateException e) {
             model.addAttribute("error", e.getMessage());
             return "registrationFailure";
