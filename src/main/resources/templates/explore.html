@@ -137,13 +137,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="#">Dashboard
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/explore}">Explore</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Explore</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Offers</a>
@@ -210,10 +210,10 @@
 
 <div class="container">
     <div class="row">
-        <div th:each="trip : ${trips}" class="col-md-12">
+        <div th:each="trip : ${allTrips}" class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${user.getUserName()}">Username</h5>
+                    <h5 class="card-title" th:text="${trip.getCreator().getUserName()}">Username</h5>
                     <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
                     <p class="card-text" th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Date</p>
                 </div>

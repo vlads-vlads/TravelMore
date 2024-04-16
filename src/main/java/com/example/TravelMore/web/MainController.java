@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+
 import java.util.List;
 
 @Controller
@@ -76,7 +77,26 @@ public class MainController {
                 return "main";
             }
         }
-
         return "redirect:/login";
     }
+
+    @GetMapping("/explore")
+    public String explorePage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+        if (!authToken.isEmpty()) {
+            Long userId = jwtTokenUtil.extractUserId(authToken);
+            if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
+                User user = userService.getUserById(userId);
+                if (user != null) {
+                    List<Trip> allTrips = tripService.getAllTrips();
+                    model.addAttribute("user", user);
+                    model.addAttribute("allTrips", allTrips);
+                    return "explore";
+                } else {
+                    return "redirect:/login";
+                }
+            }
+        }
+        return "redirect:/login";
+    }
+
 }
