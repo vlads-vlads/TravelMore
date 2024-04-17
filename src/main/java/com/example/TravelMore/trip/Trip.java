@@ -5,6 +5,9 @@ import com.example.TravelMore.UserAccount.User;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -71,6 +74,7 @@ public class Trip {
         return id;
     }
 
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -122,4 +126,11 @@ public class Trip {
     public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
+
+    public long getDuration() {
+        LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
+    }
 }
+
