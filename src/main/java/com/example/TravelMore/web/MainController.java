@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -63,22 +64,21 @@ public class MainController {
     @GetMapping("/main")
     public String mainPage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
         if (!authToken.isEmpty()) {
-
             Long userId = jwtTokenUtil.extractUserId(authToken);
             User user = userService.getUserById(userId);
 
             if (user != null) {
-
                 List<Trip> trips = tripService.getTripsByCreatorId(user);
-
+                trips.sort(Comparator.comparing(Trip::getStartDate));
                 model.addAttribute("user", user);
                 model.addAttribute("trips", trips);
 
                 return "main";
             }
         }
-        return "redirect:/login";
+        return "redirect:/index";
     }
+
 
     @GetMapping("/explore")
     public String explorePage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
@@ -92,11 +92,11 @@ public class MainController {
                     model.addAttribute("allTrips", allTrips);
                     return "explore";
                 } else {
-                    return "redirect:/login";
+                    return "redirect:/index";
                 }
             }
         }
-        return "redirect:/login";
+        return "redirect:/index";
     }
 
 }
