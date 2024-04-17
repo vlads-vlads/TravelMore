@@ -1,5 +1,6 @@
 package com.example.TravelMore.trip;
 
+import com.example.TravelMore.Image.Image;
 import com.example.TravelMore.UserAccount.User;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,6 +38,9 @@ public class Trip {
     @JoinTable(name = "trip_participants", joinColumns = @JoinColumn(name = "trip_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> participants;
 
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<Image> images;
+
 
     public Trip() {
     }
@@ -56,6 +60,14 @@ public class Trip {
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     public Long getId() {
