@@ -62,4 +62,6 @@ public class CommentController {
         List<Comment> comments = commentService.getCommentsForTrip(tripId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
+
+
 }

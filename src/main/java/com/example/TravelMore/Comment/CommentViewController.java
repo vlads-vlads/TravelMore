@@ -1,21 +1,27 @@
 package com.example.TravelMore.Comment;
 
+import com.example.TravelMore.trip.Trip;
+import com.example.TravelMore.trip.TripService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import com.example.TravelMore.util.JwtTokenUtil;
 
 @Controller
 @RequestMapping("/comments")
 public class CommentViewController {
 
     private final CommentService commentService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final TripService tripService;
 
     @Autowired
-    public CommentViewController(CommentService commentService) {
+    public CommentViewController(CommentService commentService, JwtTokenUtil jwtTokenUtil, TripService tripService) {
         this.commentService = commentService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.tripService = tripService;
     }
 
     @GetMapping
@@ -59,6 +65,24 @@ public class CommentViewController {
                     return "comment-delete";
                 })
                 .orElse("redirect:/comments");
+    }
+
+    @PostMapping("/comment/add")
+    public String addComment(@RequestParam("tripId") Long tripId, @RequestParam("description") String description, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+        if (!authToken.isEmpty()) {
+            Long userId = jwtTokenUtil.extractUserId(authToken);
+            if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
+
+                Comment comment = new Comment();
+                comment.setContent(description);
+
+                commentService.saveComment(comment, tripId);
+
+                return "redirect:/tripcard?tripId=" + tripId + "&userId=" + userId;
+            }
+        }
+
+        return "redirect:/index";
     }
 }
 

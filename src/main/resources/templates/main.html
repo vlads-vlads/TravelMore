@@ -179,7 +179,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="shareTripForm" th:action="@{/trips/add}" method="post">
+                <form id="shareTripForm" th:action="@{/trips/add}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="creator" th:value="${user.getId()}">
                     <div class="form-group">
                         <label for="tripName">Destination</label>
@@ -198,6 +198,15 @@
                         <label for="tripEndDate">End Date</label>
                         <input type="date" class="form-control" id="tripEndDate" name="endDate">
                     </div>
+                    <div class="form-group">
+                        <label for="tripDescription">Description</label>
+                        <textarea class="form-control" id="tripDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="tripImage">Trip Image</label>
+                        <input type="file" class="form-control-file" id="tripImage" name="file">
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -210,14 +219,16 @@
 
 <div class="container">
     <div class="row">
-        <div th:each="trip : ${trips}" class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${user.getUserName()}">Username</h5>
-                    <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
-                    <p class="card-text" th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Date</p>
+        <div th:each="trip, iterStat : ${trips}" class="col-md-12">
+            <a th:href="@{'tripcard?tripId=' + ${trip.getId()} + '&userId=' + ${user.getId()}}" class="card-link">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${user.getUserName()}">Username</h5>
+                        <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+                        <p class="card-text" th:text="${#dates.format(trip.getStartDate(), 'yyyy.MM.dd')}">Trip Date</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </div>

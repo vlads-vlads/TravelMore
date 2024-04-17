@@ -59,6 +59,10 @@ public class Comment {
     public Comment() {
     }
 
+    public Comment(String content) {
+        this.content = content;
+    }
+
     public Comment(String content, User user, Trip trip) {
         this.content = content;
         this.user = user;

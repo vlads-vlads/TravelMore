@@ -114,6 +114,35 @@
             font-size: 1.1em;
         }
 
+        .comment-container {
+    margin-top: 20px;
+}
+
+.comment {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.comment p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.comment .username {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.comment .comment-date {
+    font-size: 12px;
+    color: #999;
+}
+
+
     </style>
 </head>
 <body>
@@ -222,10 +251,9 @@
 
 <div class="container">
     <div class="row">
-        <div th:each="trip : ${trips}" class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title username" th:text="${user.getUserName()}">Username</h5>
+                    <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                     <p class="card-text" th:text="${trip.destination}">Destination</p>
                     <p class="card-text">
                         <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
@@ -238,21 +266,24 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <form th:action="@{/comment/add}" method="post">
+                    <form class="comment-form" th:action="@{/comments/comment/add}" method="post">
                         <input type="hidden" name="tripId" th:value="${trip.id}">
                         <div class="form-group">
                             <label for="comment">Write your comment:</label>
-                            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                            <textarea class="form-control" id="comment" name="description" rows="3"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                     <!-- Display existing comments -->
-                    <div th:each="comment : ${trip.comments}">
-                        <p th:text="${comment.text}"></p>
+                    <div class="comment-container">
+                        <div th:each="comment : ${comments}" class="comment">
+<!--                            <p class="username" th:text="${comment.getUser().getUsername()}">John Doe</p>-->
+                            <p class="comment-date" th:text="${comment.getCreatedAt()}">April 18, 2024</p>
+                            <p class="comment-content" th:text="${comment.getContent()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>
 
