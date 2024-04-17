@@ -239,10 +239,10 @@
 
 <div class="container">
     <div class="row">
-        <div th:each="trip : ${trips}" class="col-md-12">
+        <div th:each="trip : ${allTrips}" class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title username" th:text="${user.getUserName()}">Username</h5>
+                    <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                     <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
                     <p class="card-text">
                         <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
@@ -250,6 +250,9 @@
                         <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
                     </p>
                     <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
+                    <div th:each="image : ${trip.images}">
+                        <img th:src="'data:image/jpg;base64,' + ${image.getBase64image()}" alt="Image" />
+                    </div>
                 </div>
             </div>
         </div>

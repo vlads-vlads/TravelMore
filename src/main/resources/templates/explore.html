@@ -110,6 +110,17 @@
             z-index: 999;
         }
 
+         .duration {
+            font-weight: bold;
+            color: #FF5722;
+            font-size: 1.2em;
+        }
+
+        .username {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
     </style>
 </head>
 <body>
@@ -213,9 +224,17 @@
         <div th:each="trip : ${allTrips}" class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${trip.getCreator().getUserName()}">Username</h5>
+                    <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                     <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
-                    <p class="card-text" th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Date</p>
+                    <p class="card-text">
+                        <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
+                        <span>/</span>
+                        <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
+                    </p>
+                    <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
+                    <div th:each="image : ${trip.images}">
+                        <img th:src="'data:image/jpg;base64,' + ${image.getBase64image()}" alt="Image" />
+                    </div>
                 </div>
             </div>
         </div>
