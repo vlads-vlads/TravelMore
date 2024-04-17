@@ -22,6 +22,8 @@ public class Trip {
 
     private String name;
 
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User creator;
@@ -45,21 +47,23 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate) {
+    public Trip(String name, User creator, String destination, Date startDate, Date endDate, String description) {
         this.name = name;
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.description = description;
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants) {
+    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants, String description) {
         this.name = name;
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
+        this.description = description;
     }
 
     public List<Image> getImages() {
@@ -131,6 +135,13 @@ public class Trip {
         LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
+    }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 

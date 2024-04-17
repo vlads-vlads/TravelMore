@@ -57,14 +57,17 @@ public class TripController {
                           @RequestParam("startDate") String startDateString,
                           @RequestParam("endDate") String endDateString,
                           @RequestParam("file") MultipartFile file,
+                          @RequestParam("description") String description,
                           Model model) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = dateFormat.parse(startDateString);
             Date endDate = dateFormat.parse(endDateString);
 
+
             trip.setStartDate(startDate);
             trip.setEndDate(endDate);
+            trip.setDescription(description);
 
             tripService.addTrip(trip);
 
