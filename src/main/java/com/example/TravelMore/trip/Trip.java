@@ -1,9 +1,13 @@
 package com.example.TravelMore.trip;
 
+import com.example.TravelMore.Image.Image;
 import com.example.TravelMore.UserAccount.User;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +21,8 @@ public class Trip {
     private Long id;
 
     private String name;
+
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,30 +40,44 @@ public class Trip {
     @JoinTable(name = "trip_participants", joinColumns = @JoinColumn(name = "trip_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> participants;
 
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<Image> images;
+
 
     public Trip() {
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate) {
+    public Trip(String name, User creator, String destination, Date startDate, Date endDate, String description) {
         this.name = name;
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.description = description;
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants) {
+    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants, String description) {
         this.name = name;
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
+        this.description = description;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -110,4 +130,18 @@ public class Trip {
     public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
+
+    public long getDuration() {
+        LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
+    }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
+
