@@ -1,14 +1,55 @@
 package com.example.TravelMore.Image;
 
-import jakarta.persistence.Id;
+import com.example.TravelMore.trip.Trip;
+import jakarta.persistence.*;
 
+
+@Entity
 public class Image {
+
     @Id
-    Long imageId;
-    String data;
-    String type;
-    public Image(String encodedString, String fileType){
-        this.data = encodedString;
-        this.type = fileType;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private String base64image;
+
+    @ManyToOne
+    @JoinColumn(name = "trip_id", nullable = false)
+    private Trip trip;
+
+    public Image() {
     }
+
+    public Image(String base64image, Trip trip) {
+        this.base64image = base64image;
+        this.trip = trip;
+    }
+
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getBase64image() {
+        return base64image;
+    }
+
+    public void setBase64image(String base64image) {
+        this.base64image = base64image;
+    }
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
 }

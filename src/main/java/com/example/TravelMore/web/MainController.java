@@ -1,5 +1,7 @@
 package com.example.TravelMore.web;
 import com.example.TravelMore.Comment.CommentService;
+import com.example.TravelMore.Image.Image;
+import com.example.TravelMore.Image.ImageService;
 import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.UserAccount.UserService;
 import com.example.TravelMore.model.LoginRequest;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -26,12 +30,15 @@ public class MainController {
     private final CommentService commentService;
     private final JwtTokenUtil jwtTokenUtil;
 
+    private final ImageService imageService;
+
     @Autowired
-    public MainController(UserService userService, TripService tripService, CommentService commentService, JwtTokenUtil jwtTokenUtil) {
+    public MainController(UserService userService, TripService tripService, CommentService commentService, JwtTokenUtil jwtTokenUtil, ImageService imageService) {
         this.userService = userService;
         this.tripService = tripService;
         this.commentService = commentService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.imageService = imageService;
     }
 
     @PostMapping("/main")
@@ -54,11 +61,17 @@ public class MainController {
 
         List<Trip> trips = tripService.getTripsByCreatorId(user);
 
+        for (Trip trip : trips) {
+            List<Image> images = imageService.getImagesByTrip(trip);
+            trip.setImages(images);
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("trips", trips);
 
         return "main";
     }
+
 
     @GetMapping("/main")
     public String mainPage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
