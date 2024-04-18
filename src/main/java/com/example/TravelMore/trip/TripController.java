@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -82,17 +83,29 @@ public class TripController {
         }
     }
 
-    @GetMapping("/{tripId}/remove")
-    public String getRemoveTripForm(@PathVariable Long tripId, Model model) {
-        Trip trip = tripService.removeTripById(tripId);
-        model.addAttribute("trip", trip);
-        return "removeTrip";
-    }
+//    @GetMapping("/{tripId}/remove")
+//    public String getRemoveTripForm(@PathVariable Long tripId, Model model) {
+//        Trip trip = tripService.removeTripById(tripId);
+//        model.addAttribute("trip", trip);
+//        return "removeTrip";
+//    }
+//
+//    @GetMapping("/{tripId}/remove")
+//    public String removeTrip(@PathVariable Long tripId, HttpServletResponse response) {
+//        tripService.removeTripById(tripId);
+//        return "redirect: /main";
+//    }
 
     @PostMapping("/{tripId}/remove")
-    public String removeTrip(@PathVariable Long tripId, HttpServletResponse response) {
-        tripService.removeTripById(tripId);
-        return "redirect:http://localhost:8080/trips/all";
+    public String removeTrip(@PathVariable Long tripId, RedirectAttributes redirectAttributes) {
+        try {
+            tripService.removeTripById(tripId);
+            redirectAttributes.addFlashAttribute("success", "Trip successfully deleted!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error deleting trip: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "redirect:/main";
     }
 
     @GetMapping("/{tripId}")

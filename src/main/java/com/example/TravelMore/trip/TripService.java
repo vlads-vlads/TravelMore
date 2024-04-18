@@ -1,12 +1,14 @@
 package com.example.TravelMore.trip;
 
+import com.example.TravelMore.Image.ImageRepository;
+import com.example.TravelMore.Comment.CommentRepository;
 import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.UserAccount.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TripService {
@@ -25,10 +27,11 @@ public class TripService {
     }
 
     public Trip removeTripById(Long tripId) {
-        Trip removedTrip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new IllegalArgumentException("Trip with ID " + tripId + " does not exist"));
+        Trip trip = tripRepository.findById(tripId).orElseThrow(() -> new IllegalArgumentException("Trip not found"));
+        CommentRepository.deleteByTrip(trip);
+        ImageRepository.deleteByTrip(trip);
         tripRepository.deleteById(tripId);
-        return removedTrip;
+        return trip;
     }
 
     public Trip updateTrip(Long tripId, Trip updatedTrip) {

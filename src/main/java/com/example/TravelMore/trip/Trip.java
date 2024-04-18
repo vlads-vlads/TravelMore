@@ -1,5 +1,6 @@
 package com.example.TravelMore.trip;
 
+import com.example.TravelMore.Comment.Comment;
 import com.example.TravelMore.Image.Image;
 import com.example.TravelMore.UserAccount.User;
 import jakarta.persistence.*;
@@ -8,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,22 +43,30 @@ public class Trip {
     private List<User> participants;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
-    private List<Image> images;
+    private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
-    public Trip() {
+    public Trip(){
+
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate, String description) {
+    public Trip(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Trip(String name, User creator, String destination, Date startDate, Date endDate, String description, List<Comment> comments) {
         this.name = name;
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
+        this.comments = comments;
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants, String description) {
+    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants, String description, List<Comment> comments) {
         this.name = name;
         this.creator = creator;
         this.destination = destination;
@@ -64,6 +74,7 @@ public class Trip {
         this.endDate = endDate;
         this.participants = participants;
         this.description = description;
+        this.comments = comments;
     }
 
     public List<Image> getImages() {

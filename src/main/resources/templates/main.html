@@ -220,19 +220,21 @@
 <div class="container">
     <div class="row">
         <div th:each="trip, iterStat : ${trips}" class="col-md-12">
-            <a th:href="@{'tripcard?tripId=' + ${trip.getId()} + '&userId=' + ${user.getId()}}" class="card-link">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${user.getUserName()}">Username</h5>
-                        <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
-                        <p class="card-text" th:text="${#dates.format(trip.getStartDate(), 'yyyy.MM.dd')}">Trip Date</p>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
+                        <h5 class="card-title" th:text="${trip.destination}">Destination</h5>
+                        <p class="card-text" th:text="${#dates.format(trip.startDate, 'yyyy.MM.dd')}">Trip Date</p>
+                    </a>
+
+                    <form th:action="@{'/trips/' + ${trip.id} + '/remove'}" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 </div>
-
 
 <div class="footer">
     <a href="#" class="fa fa-instagram"></a>
