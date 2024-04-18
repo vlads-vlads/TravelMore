@@ -28,8 +28,8 @@ public class TripController {
     }
 
     @PostMapping("/create")
-    public String createTrip(@ModelAttribute("trip") Trip trip, @RequestHeader(name = "Authorization") String token) {
-        Long creatorId = jwtTokenUtil.extractUserId(token);
+    public String createTrip(@ModelAttribute("trip") Trip trip, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+        Long creatorId = jwtTokenUtil.extractUserId(authToken);
         try {
             tripService.createTrip(trip, creatorId);
             return "redirect:/trips/all";
