@@ -269,6 +269,7 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="editTripModal2" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -279,8 +280,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editTripForm" th:action="@{/trips/edit}" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="creator" th:value="${user.getId()}">
+                <form id="editTripForm" th:action="@{'/trips/edit/' + ${trip.id}}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="user" th:value="${user.getId()}">
                     <div class="form-group">
                         <label for="tripName">Destination</label>
                         <select class="form-control" id="tripNameEdit" name="destination">
@@ -325,7 +326,7 @@
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
                 <div class="card-body">
-                    <a href="#editTripModal2" class="btn btn-primary btn-edit-trip" data-toggle="modal" onclick="populateEditForm(${trip.id})">Edit</a>
+                    <a href="#editTripModal2" class="btn btn-primary btn-edit-trip" data-toggle="modal" >Edit</a>
                     <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
                         <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                         <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
@@ -341,6 +342,8 @@
         </div>
     </div>
 </div>
+
+
 
 <div class="footer">
     <a href="#" class="fa fa-instagram"></a>
