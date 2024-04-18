@@ -99,6 +99,7 @@ public class MainController {
                 User user = userService.getUserById(userId);
                 if (user != null) {
                     List<Trip> allTrips = tripService.getAllTrips();
+                    allTrips.sort(Comparator.comparing(Trip::getStartDate));
                     model.addAttribute("user", user);
                     model.addAttribute("allTrips", allTrips);
                     return "explore";
