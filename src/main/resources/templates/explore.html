@@ -151,6 +151,14 @@
             font-size: 1.1em;
         }
 
+        .content-background {
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
     </style>
 </head>
@@ -192,10 +200,10 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span th:text="${user.getUserName()}">Username</span>
+                        <span th:text="${loggedInUser.userName}">Username</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" th:href="@{/profile}">Profile</a>
+                        <a class="dropdown-item" th:href="@{/profile/{userId}(userId=${loggedInUser.id})}">Profile</a>
                         <a class="dropdown-item" th:href="@{/upcomingTrips}">Upcoming Trips</a>
                         <a class="dropdown-item" th:href="@{/pastTrips}">Past Trips</a>
                         <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
@@ -257,14 +265,14 @@
         </div>
     </div>
 </div>
-
+<div class="content-background">
 <div class="container">
     <div class="row">
         <div th:each="trip : ${allTrips}" class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
-                        <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
+                    <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
+                    <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                         <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
                         <p class="card-text">
                             <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
@@ -277,6 +285,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
