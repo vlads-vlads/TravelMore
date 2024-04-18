@@ -17,29 +17,25 @@ public class TripParticipantController {
 
     private final TripParticipantService tripParticipantService;
     private final TripService tripService;
-    private final UserService userService;
 
     @Autowired
-    public TripParticipantController(TripParticipantService tripParticipantService, TripService tripService, UserService userService) {
+    public TripParticipantController(TripParticipantService tripParticipantService, TripService tripService) {
         this.tripParticipantService = tripParticipantService;
         this.tripService = tripService;
-        this.userService = userService;
     }
 
     @GetMapping("/{tripId}/add")
     public String showAddParticipantForm(@PathVariable Long tripId, Model model) {
-        Trip trip = tripService.getTripById(tripId);
-        List<User> users = userService.getUsers();
-        model.addAttribute("trip", trip);
-        model.addAttribute("users", users);
+//        Trip trip = tripService.getTripById(tripId);
+//        List<User> users = tripService.getAvailableParticipants(tripId);
+//        model.addAttribute("trip", trip);
+//        model.addAttribute("users", users);
         return "addParticipant";
     }
 
     @PostMapping("/{tripId}/add")
-    public String addParticipantToTrip(@PathVariable Long tripId, @RequestParam Long userId) {
-        Trip trip = tripService.getTripById(tripId);
-        User participant = userService.getUserById(userId);
-        tripParticipantService.addParticipantToTrip(trip, participant);
+    public String addParticipantToTrip(@PathVariable Long tripId, @RequestParam Long participantId) {
+        tripParticipantService.addParticipantToTrip(tripId, participantId);
         return "redirect:/trip-participants/" + tripId + "/participants";
     }
 
@@ -54,9 +50,7 @@ public class TripParticipantController {
 
     @GetMapping("/{tripId}/remove/{participantId}")
     public String removeParticipantFromTrip(@PathVariable Long tripId, @PathVariable Long participantId) {
-        Trip trip = tripService.getTripById(tripId);
-        tripParticipantService.removeParticipantFromTrip(trip, participantId);
+        tripParticipantService.removeParticipantFromTrip(tripId, participantId);
         return "redirect:/trip-participants/" + tripId + "/participants";
     }
-
 }

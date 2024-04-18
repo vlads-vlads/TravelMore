@@ -1,7 +1,7 @@
 package com.example.TravelMore.trip;
 
-import com.example.TravelMore.Comment.Comment;
-import com.example.TravelMore.Comment.CommentService;
+import com.example.TravelMore.comment.Comment;
+import com.example.TravelMore.comment.CommentService;
 import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.tripParticipant.TripParticipant;
 import com.example.TravelMore.tripParticipant.TripParticipantService;
@@ -20,38 +20,40 @@ import java.util.Map;
 public class TripRestController {
 
     private final TripService tripService;
-    private final TripParticipantService tripParticipantService;
-    private final CommentService commentService;
 
     @Autowired
-    public TripRestController(TripService tripService, TripParticipantService tripParticipantService, CommentService commentService) {
+    public TripRestController(TripService tripService) {
         this.tripService = tripService;
-        this.tripParticipantService = tripParticipantService;
-        this.commentService = commentService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Trip> addTrip(@Valid @RequestBody Trip trip) {
-        Trip addedTrip = tripService.addTrip(trip);
-        return new ResponseEntity<>(addedTrip, HttpStatus.CREATED);
+    @PostMapping("/create")
+    public ResponseEntity<Trip> createTrip(@RequestBody Trip trip, @RequestParam Long creatorId) {
+        try {
+            Trip createdTrip = tripService.createTrip(trip, creatorId);
+            return new ResponseEntity<>(createdTrip, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @DeleteMapping("/{tripId}")
-    public ResponseEntity<Trip> removeTripById(@PathVariable Long tripId) {
-        Trip removedTrip = tripService.removeTripById(tripId);
-        return new ResponseEntity<>(removedTrip, HttpStatus.OK);
+    @PutMapping("/update")
+    public ResponseEntity<Trip> updateTrip(@RequestBody Trip trip) {
+        try {
+            Trip updatedTrip = tripService.updateTrip(trip);
+            return new ResponseEntity<>(updatedTrip, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PutMapping("/{tripId}")
-    public ResponseEntity<Trip> updateTrip(@PathVariable Long tripId, @Valid @RequestBody Trip updatedTrip) {
-        Trip updated = tripService.updateTrip(tripId, updatedTrip);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
-    }
-
-    @PostMapping("/{tripId}/participants")
-    public ResponseEntity<Trip> addParticipantToTrip(@PathVariable Long tripId, @Valid @RequestBody User participant) {
-        Trip updatedTrip = tripService.addParticipantToTrip(tripId, participant);
-        return new ResponseEntity<>(updatedTrip, HttpStatus.OK);
+    @DeleteMapping("/delete/{tripId}")
+    public ResponseEntity<Void> deleteTrip(@PathVariable Long tripId) {
+        try {
+            tripService.deleteTrip(tripId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/all")
@@ -61,22 +63,42 @@ public class TripRestController {
     }
 
     @GetMapping("/{tripId}")
-    public ResponseEntity<Map<String, Object>> showTripDetails(@PathVariable Long tripId) {
+    public ResponseEntity<Trip> getTripById(@PathVariable Long tripId) {
         Trip trip = tripService.getTripById(tripId);
-
-        if (trip == null) {
+        if (trip != null) {
+            return new ResponseEntity<>(trip, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        List<TripParticipant> participants = tripParticipantService.getParticipantsByTrip(trip);
-        List<Comment> comments = commentService.getCommentsForTrip(tripId);
-
-        Map<String, Object> tripDetails = new HashMap<>();
-        tripDetails.put("trip", trip);
-        tripDetails.put("participants", participants);
-        tripDetails.put("comments", comments);
-
-        return new ResponseEntity<>(tripDetails, HttpStatus.OK);
     }
 
+    @GetMapping("/creator/{creatorId}")
+    public ResponseEntity<List<Trip>> getTripsByCreatorId(@PathVariable Long creatorId) {
+        try {
+            List<Trip> trips = tripService.getTripsByCreatorId(creatorId);
+            return new ResponseEntity<>(trips, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+//    @PostMapping("/{tripId}/addParticipant")
+//    public ResponseEntity<Void> addParticipantToTrip(@PathVariable Long tripId, @RequestParam Long userId) {
+//        try {
+//            tripService.addParticipantToTrip(tripId, userId);
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } catch (IllegalArgumentException e) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @DeleteMapping("/{tripId}/removeParticipant")
+//    public ResponseEntity<Void> removeParticipantFromTrip(@PathVariable Long tripId, @RequestParam Long participantId) {
+//        try {
+//            tripService.removeParticipantFromTrip(tripId, participantId);
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } catch (IllegalArgumentException e) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

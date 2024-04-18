@@ -1,5 +1,6 @@
 package com.example.TravelMore.web;
-import com.example.TravelMore.Comment.CommentService;
+import com.example.TravelMore.comment.Comment;
+import com.example.TravelMore.comment.CommentService;
 import com.example.TravelMore.Image.Image;
 import com.example.TravelMore.Image.ImageService;
 import com.example.TravelMore.UserAccount.User;
@@ -13,10 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -60,10 +58,10 @@ public class MainController {
             return "register";
         }
 
-        List<Trip> trips = tripService.getTripsByCreatorId(user);
+        List<Trip> trips = tripService.getTripsByCreatorId(user.getId());
 
         for (Trip trip : trips) {
-            List<Image> images = imageService.getImagesByTrip(trip);
+            List<Image> images = imageService.getImagesByTripId(trip.getId());
             trip.setImages(images);
         }
 
@@ -81,7 +79,7 @@ public class MainController {
             User user = userService.getUserById(userId);
 
             if (user != null) {
-                List<Trip> trips = tripService.getTripsByCreatorId(user);
+                List<Trip> trips = tripService.getTripsByCreatorId(user.getId());
                 trips.sort(Comparator.comparing(Trip::getStartDate));
                 model.addAttribute("user", user);
                 model.addAttribute("trips", trips);
@@ -106,6 +104,26 @@ public class MainController {
                     return "explore";
                 } else {
                     return "redirect:/index";
+                }
+            }
+        }
+        return "redirect:/index";
+    }
+
+    @GetMapping("/tripcard")
+    public String tripCardPage(@RequestParam("tripId") Long tripId, @RequestParam("userId") Long userId, Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+        if (!authToken.isEmpty()) {
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
+            if (authenticatedUserId != null && authenticatedUserId.equals(userId) && jwtTokenUtil.validateToken(authToken, userId)) {
+                Trip trip = tripService.getTripById(tripId);
+                User user = userService.getUserById(userId);
+
+                if (trip != null && user != null) {
+                    List<Comment> comments = commentService.getCommentsForTrip(tripId);
+                    model.addAttribute("trip", trip);
+                    model.addAttribute("user", user);
+                    model.addAttribute("comments", comments);
+                    return "tripcard";
                 }
             }
         }

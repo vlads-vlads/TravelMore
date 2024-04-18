@@ -9,17 +9,17 @@ import jakarta.persistence.*;
 public class TripParticipant {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_participant_generator")
-    @SequenceGenerator(name = "trip_participant_generator", sequenceName = "trip_participant_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_participant_sequence_generator")
+    @SequenceGenerator(name = "trip_participant_sequence_generator", sequenceName = "trip_participant_seq", allocationSize = 1)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trip_id")
-    private Trip trip;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne //(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
 
     public TripParticipant() {
     }
@@ -31,10 +31,6 @@ public class TripParticipant {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Trip getTrip() {

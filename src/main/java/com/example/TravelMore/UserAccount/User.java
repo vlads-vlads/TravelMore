@@ -1,23 +1,20 @@
 package com.example.TravelMore.UserAccount;
 
+import com.example.TravelMore.joinRequest.JoinRequest;
+import com.example.TravelMore.trip.Trip;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
-
-    @Column(name = "user_id")
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence_generator")
+    @SequenceGenerator(name = "user_sequence_generator", sequenceName = "user_seq", allocationSize = 1)
+    private Long id;
 
     private String userName;
 
@@ -25,8 +22,19 @@ public class User {
 
     private String userPassword;
 
-    public User() {
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private List<Trip> createdTrips = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<JoinRequest> sentJoinRequests = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "trip_participants",
+            joinColumns = @JoinColumn(name = "participant_id"),
+            inverseJoinColumns = @JoinColumn(name = "trip_id"))
+    private List<Trip> trips = new ArrayList<>();
+
+
+    public User() {
     }
 
     public User(String userName, String userEmail, String userPassword) {
@@ -35,9 +43,8 @@ public class User {
         this.userPassword = userPassword;
     }
 
-
     public Long getId() {
-        return userId;
+        return id;
     }
 
     public String getUserName() {
@@ -64,4 +71,27 @@ public class User {
         this.userPassword = userPassword;
     }
 
+    public List<JoinRequest> getSentJoinRequests() {
+        return sentJoinRequests;
+    }
+
+    public void setSentJoinRequests(List<JoinRequest> sentJoinRequests) {
+        this.sentJoinRequests = sentJoinRequests;
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
+    }
+
+    public List<Trip> getCreatedTrips() {
+        return createdTrips;
+    }
+
+    public void setCreatedTrips(List<Trip> createdTrips) {
+        this.createdTrips = createdTrips;
+    }
 }

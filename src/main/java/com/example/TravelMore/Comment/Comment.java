@@ -1,4 +1,4 @@
-package com.example.TravelMore.Comment;
+package com.example.TravelMore.comment;
 
 import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.trip.Trip;

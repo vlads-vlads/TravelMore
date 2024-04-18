@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/trip-participants")
+//@RestController
+//@RequestMapping("/api/trip-participants")
 public class TripParticipantRestController {
 
     private final TripParticipantService tripParticipantService;
@@ -23,27 +23,27 @@ public class TripParticipantRestController {
         this.tripService = tripService;
     }
 
-    @PostMapping("/{tripId}/add")
-    public ResponseEntity<TripParticipant> addParticipantToTrip(@PathVariable Long tripId, @RequestBody User participant) {
-        Trip trip = tripService.getTripById(tripId);
+//    @PostMapping("/{tripId}/add")
+//    public ResponseEntity<TripParticipant> addParticipantToTrip(@PathVariable Long tripId, @RequestBody User participant) {
+//        Trip trip = tripService.getTripById(tripId);
+//
+//        TripParticipant addedParticipant = tripParticipantService.addParticipantToTrip(trip, participant);
+//
+//        return new ResponseEntity<>(addedParticipant, HttpStatus.CREATED);
+//    }
 
-        TripParticipant addedParticipant = tripParticipantService.addParticipantToTrip(trip, participant);
-
-        return new ResponseEntity<>(addedParticipant, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/{tripId}/participants")
-    public ResponseEntity<List<TripParticipant>> getParticipantsByTrip(@PathVariable Long tripId) {
-        Trip trip = tripService.getTripById(tripId);
-        List<TripParticipant> participants = tripParticipantService.getParticipantsByTrip(trip);
-        return new ResponseEntity<>(participants, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{tripId}/remove/{participantId}")
-    public ResponseEntity<?> removeParticipantFromTrip(@PathVariable Long tripId, @PathVariable Long participantId) {
-        Trip trip = tripService.getTripById(tripId);
-        tripParticipantService.removeParticipantFromTrip(trip, participantId);
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/{tripId}/participants")
+//    public ResponseEntity<List<TripParticipant>> getParticipantsByTrip(@PathVariable Long tripId) {
+//        Trip trip = tripService.getTripById(tripId);
+//        List<TripParticipant> participants = tripParticipantService.getParticipantsByTrip(trip);
+//        return new ResponseEntity<>(participants, HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping("/{tripId}/remove/{participantId}")
+//    public ResponseEntity<?> removeParticipantFromTrip(@PathVariable Long tripId, @PathVariable Long participantId) {
+//        Trip trip = tripService.getTripById(tripId);
+//        tripParticipantService.removeParticipantFromTrip(trip, participantId);
+//        return ResponseEntity.ok().build();
+//    }
 
 }

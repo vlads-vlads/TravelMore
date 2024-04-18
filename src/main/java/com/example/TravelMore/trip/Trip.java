@@ -2,9 +2,12 @@ package com.example.TravelMore.trip;
 
 import com.example.TravelMore.Image.Image;
 import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.joinRequest.JoinRequest;
+import com.example.TravelMore.tripParticipant.TripParticipant;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -12,18 +15,18 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "trips")
 public class Trip {
 
     @Id
-    @SequenceGenerator(name = "trip_sequence", sequenceName = "trip_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_sequence_generator")
+    @SequenceGenerator(name = "trip_sequence_generator", sequenceName = "trip_seq", allocationSize = 1)
     private Long id;
 
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "creator_id")
     private User creator;
 
     private String destination;
@@ -34,32 +37,33 @@ public class Trip {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "trip_participants", joinColumns = @JoinColumn(name = "trip_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> participants;
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<JoinRequest> joinRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<TripParticipant> participants = new ArrayList<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
     private List<Image> images;
 
-
     public Trip() {
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate) {
-        this.name = name;
+    public Trip(User creator, String destination, Date startDate, Date endDate) {
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants) {
-        this.name = name;
-        this.creator = creator;
-        this.destination = destination;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.participants = participants;
+    public void addJoinRequest(JoinRequest joinRequest) {
+        this.joinRequests.add(joinRequest);
+        joinRequest.setTrip(this);
+    }
+
+    public void removeJoinRequest(JoinRequest joinRequest) {
+        this.joinRequests.remove(joinRequest);
+        joinRequest.setTrip(null);
     }
 
     public List<Image> getImages() {
@@ -72,11 +76,6 @@ public class Trip {
 
     public Long getId() {
         return id;
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -119,12 +118,20 @@ public class Trip {
         this.endDate = endDate;
     }
 
-    public List<User> getParticipants() {
+    public List<TripParticipant> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<User> participants) {
+    public void setParticipants(List<TripParticipant> participants) {
         this.participants = participants;
+    }
+
+    public List<JoinRequest> getJoinRequests() {
+        return joinRequests;
+    }
+
+    public void setJoinRequests(List<JoinRequest> joinRequests) {
+        this.joinRequests = joinRequests;
     }
 
     public long getDuration() {
@@ -133,4 +140,3 @@ public class Trip {
         return ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
     }
 }
-

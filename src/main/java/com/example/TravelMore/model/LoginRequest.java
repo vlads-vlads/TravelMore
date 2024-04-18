@@ -5,7 +5,6 @@ public class LoginRequest {
     private String userPassword;
 
     public LoginRequest() {
-
     }
 
     public LoginRequest(String userEmail, String userPassword) {

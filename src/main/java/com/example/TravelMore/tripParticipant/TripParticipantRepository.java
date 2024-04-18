@@ -12,8 +12,11 @@ public interface TripParticipantRepository extends JpaRepository<TripParticipant
 
     List<TripParticipant> findByTripId(Long tripId);
 
+    List<TripParticipant> findByTrip(Trip trip);
+
     boolean existsByTripAndUser(Trip trip, User user);
 
     TripParticipant findByTripIdAndUserId(Long tripId, Long userId);
 
+    TripParticipant findByTripAndUser(Trip trip, User user);
 }

@@ -32,7 +32,6 @@ public class Base64Util {
     }
 
     public static void main(String[] args) {
-//        TODO: change to interact with the database
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File("src/main/resources/strawberry.png"));

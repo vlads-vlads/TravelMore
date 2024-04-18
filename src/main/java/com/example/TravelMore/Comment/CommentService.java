@@ -1,4 +1,4 @@
-package com.example.TravelMore.Comment;
+package com.example.TravelMore.comment;
 
 import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripService;
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class CommentService {
 
-    private final com.example.TravelMore.Comment.CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
     private final TripService tripService;
 
     @Autowired
-    public CommentService(com.example.TravelMore.Comment.CommentRepository commentRepository, TripService tripService) {
+    public CommentService(CommentRepository commentRepository, TripService tripService) {
         this.commentRepository = commentRepository;
         this.tripService = tripService;
     }

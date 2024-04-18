@@ -1,4 +1,4 @@
-package com.example.TravelMore.Comment;
+package com.example.TravelMore.comment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package com.example.TravelMore.Comment;
+package com.example.TravelMore.comment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,12 +11,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/comments")
-public class CommentController {
+public class CommentRestController {
 
     private final CommentService commentService;
 
     @Autowired
-    public CommentController(CommentService commentService) {
+    public CommentRestController(CommentService commentService) {
         this.commentService = commentService;
     }
 

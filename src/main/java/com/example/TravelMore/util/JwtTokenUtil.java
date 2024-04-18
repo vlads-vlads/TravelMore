@@ -14,14 +14,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class    JwtTokenUtil {
-
+public class JwtTokenUtil {
 
     @Value("${jwt.expiration}")
     private Long expiration;
 
     private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
 
     public String generateToken(Long userId) {
         Map<String, Object> claims = new HashMap<>();
@@ -48,7 +46,6 @@ public class    JwtTokenUtil {
         }
     }
 
-
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
@@ -59,21 +56,16 @@ public class    JwtTokenUtil {
         return claimsResolver.apply(claims);
     }
 
-
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
-
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
-
 
     public Boolean validateToken(String token, Long userId) {
         final Long extractedUserId = extractUserId(token);
         return (extractedUserId != null && extractedUserId.equals(userId) && !isTokenExpired(token));
     }
 }
-
-

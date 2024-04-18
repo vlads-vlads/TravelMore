@@ -3,38 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Trip Details</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div class="container mt-5">
-  <h2>Trip Details</h2>
-  <div>
-    <h3>Trip Information</h3>
-    <p>ID: <span th:text="${trip.id}"></span></p>
-    <p>Name: <span th:text="${trip.name}"></span></p>
-    <p>Destination: <span th:text="${trip.destination}"></span></p>
-    <p>Start Date: <span th:text="${trip.startDate}"></span></p>
-    <p>End Date: <span th:text="${trip.endDate}"></span></p>
-  </div>
-  <div>
-    <h3>Participants</h3>
-    <ul>
-      <li th:each="participant : ${participants}">
-        <span th:text="${participant.user.userName}"></span>
-      </li>
-    </ul>
-  </div>
-  <div>
-    <h3>Comments</h3>
-    <ul>
-      <li th:each="comment : ${comments}">
-        <p>
-          <span th:text="${comment.content}"></span>
-          by <span th:text="${comment.authorName}"></span>
-        </p>
-      </li>
-    </ul>
-  </div>
+<h2>Trip Details</h2>
+<p th:text="'Destination: ' + ${trip.destination}"></p>
+<p th:text="'Start Date: ' + ${trip.startDate}"></p>
+<p th:text="'End Date: ' + ${trip.endDate}"></p>
+<h3>Uploaded Images</h3>
+<div th:each="image : ${trip.images}">
+  <img th:src="'data:image/jpg;base64,' + ${image.base64image}" alt="Trip Image"/>
 </div>
 </body>
 </html>
+

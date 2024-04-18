@@ -37,18 +37,18 @@ public class UserService {
         return user;
     }
 
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
                 .orElse(null);
     }
 
-    public void deleteUser(Long userId) {
-        boolean exists = userRepository.existsById(userId);
+    public void deleteUser(Long id) {
+        boolean exists = userRepository.existsById(id);
         if (!exists) {
             throw new IllegalStateException(
-                    "account with id " + userId + " does not exists");
+                    "account with id " + id + " does not exists");
         }
-        userRepository.deleteById(userId);
+        userRepository.deleteById(id);
     }
 
     public User updateUser(Long userId, User userUpdates) {

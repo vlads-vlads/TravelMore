@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Join Request Status</title>
+</head>
+<body>
+<h2>Join Request Status</h2>
+<p th:switch="${status}">
+  <span th:case="'CREATED'">Your join request has been submitted successfully.</span>
+  <span th:case="'ACCEPTED'">Your join request has been accepted.</span>
+  <span th:case="'DECLINED'">Your join request has been declined.</span>
+</p>
+</body>
+</html>

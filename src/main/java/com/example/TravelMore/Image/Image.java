@@ -3,12 +3,13 @@ package com.example.TravelMore.Image;
 import com.example.TravelMore.trip.Trip;
 import jakarta.persistence.*;
 
-
 @Entity
+@Table(name = "images")
 public class Image {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_sequence_generator")
+    @SequenceGenerator(name = "image_sequence_generator", sequenceName = "image_seq", allocationSize = 1)
     private Long id;
 
     @Lob
@@ -27,7 +28,6 @@ public class Image {
         this.trip = trip;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -51,5 +51,4 @@ public class Image {
     public void setTrip(Trip trip) {
         this.trip = trip;
     }
-
 }
