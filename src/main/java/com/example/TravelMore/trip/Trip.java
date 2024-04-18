@@ -23,7 +23,7 @@ public class Trip {
     @SequenceGenerator(name = "trip_sequence_generator", sequenceName = "trip_seq", allocationSize = 1)
     private Long id;
 
-    private String name;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
@@ -78,12 +78,12 @@ public class Trip {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public User getCreator() {
