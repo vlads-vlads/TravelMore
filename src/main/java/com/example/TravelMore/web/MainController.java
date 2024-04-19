@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -61,10 +62,20 @@ public class MainController {
 
         List<Trip> trips = tripService.getTripsByCreatorId(user);
 
-        trips.sort(Comparator.comparing(Trip::getStartDate));
+        List<Trip> completeTrips = trips.stream()
+                .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
+                .collect(Collectors.toList());
+
+        List<Trip> incompleteTrips = trips.stream()
+                .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
+                .collect(Collectors.toList());
+
+        completeTrips.sort(Comparator.comparing(Trip::getStartDate));
+//        incompleteTrips.sort(Comparator.comparing(Trip::getStartDate));
         model.addAttribute("user", user);
-        model.addAttribute("trips", trips);
+        model.addAttribute("incompleteTrips", incompleteTrips);
         model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("completeTrips", completeTrips);
 
         return "main";
     }
@@ -78,44 +89,98 @@ public class MainController {
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
                 User loggedInUser = userService.getUserById(authenticatedUserId);
 
-                User user = userService.getUserById(authenticatedUserId);
-                if (user != null) {
-                    List<Trip> trips = tripService.getTripsByCreatorId(user);
-                    trips.sort(Comparator.comparing(Trip::getStartDate));
-                    model.addAttribute("user", user);
-                    model.addAttribute("trips", trips);
-                    model.addAttribute("loggedInUser", loggedInUser);
+            User user = userService.getUserById(authenticatedUserId);
+            if (user != null) {
+                List<Trip> trips = tripService.getTripsByCreatorId(user);
 
-                    return "main";
+                List<Trip> completeTrips = trips.stream()
+                        .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
+                        .collect(Collectors.toList());
+
+                List<Trip> incompleteTrips = trips.stream()
+                        .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
+                        .collect(Collectors.toList());
+
+                completeTrips.sort(Comparator.comparing(Trip::getStartDate));
+//                incompleteTrips.sort(Comparator.comparing(Trip::getStartDate));
+                model.addAttribute("user", user);
+                model.addAttribute("incompleteTrips", incompleteTrips);
+                model.addAttribute("loggedInUser", loggedInUser);
+                model.addAttribute("completeTrips", completeTrips);
+
+                return "main";
                 }
             }
         }
         return "redirect:/index";
     }
-
 
     @GetMapping("/explore")
     public String explorePage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
         if (!authToken.isEmpty()) {
             Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
-
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
-                User loggedInUser = userService.getUserById(authenticatedUserId);
                 User user = userService.getUserById(authenticatedUserId);
-                if (user != null) {
-                    List<Trip> allTrips = tripService.getAllTrips();
-                    allTrips.sort(Comparator.comparing(Trip::getStartDate));
-                    model.addAttribute("user", user);
-                    model.addAttribute("allTrips", allTrips);
-                    model.addAttribute("loggedInUser", loggedInUser);
-                    return "explore";
-                } else {
-                    return "redirect:/index";
-                }
+                List<Trip> allTrips = tripService.getAllTrips();
+
+                List<Trip> completeTrips = allTrips.stream()
+                        .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
+                        .collect(Collectors.toList());
+
+                List<Trip> incompleteTrips = allTrips.stream()
+                        .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
+                        .collect(Collectors.toList());
+
+                completeTrips.sort(Comparator.comparing(Trip::getStartDate));
+//                incompleteTrips.sort(Comparator.comparing(Trip::getStartDate, Comparator.nullsLast(Comparator.naturalOrder())));
+
+                model.addAttribute("user", user);
+                model.addAttribute("completeTrips", completeTrips);
+                model.addAttribute("incompleteTrips", incompleteTrips);
+                model.addAttribute("loggedInUser", user);
+
+                return "explore";
             }
         }
         return "redirect:/index";
     }
+
+
+
+
+//    @GetMapping("/explore")
+//    public String explorePage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+//        if (!authToken.isEmpty()) {
+//            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
+//
+//            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
+//                User loggedInUser = userService.getUserById(authenticatedUserId);
+//                User user = userService.getUserById(authenticatedUserId);
+//                if (user != null) {
+//                    List<Trip> allTrips = tripService.getAllTrips();
+//
+//                    List<Trip> completeTrips = trips.stream()
+//                            .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
+//                            .collect(Collectors.toList());
+//
+//                    List<Trip> incompleteTrips = trips.stream()
+//                            .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
+//                            .collect(Collectors.toList());
+//
+//                    allTrips.sort(Comparator.comparing(Trip::getStartDate));
+//                    model.addAttribute("user", user);
+//                    model.addAttribute("allTrips", allTrips);
+//                    model.addAttribute("loggedInUser", loggedInUser);
+//                    model.addAttribute("completeTrips", completeTrips);
+//                    model.addAttribute("incompleteTrips", incompleteTrips);
+//                    return "explore";
+//                } else {
+//                    return "redirect:/index";
+//                }
+//            }
+//        }
+//        return "redirect:/index";
+//    }
 
     @GetMapping("/tripcard")
     public String tripCardPage(@RequestParam("tripId") Long tripId, @RequestParam("userId") Long userId, Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
@@ -128,8 +193,6 @@ public class MainController {
 
                 if (trip != null && user != null) {
                     List<Comment> comments = commentService.getCommentsForTrip(tripId);
-                    List<Image> images = imageService.getImagesByTrip(trip);
-                    model.addAttribute("images", images);
                     model.addAttribute("trip", trip);
                     model.addAttribute("user", user);
                     model.addAttribute("loggedInUser", loggedInUser);
@@ -149,40 +212,29 @@ public class MainController {
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
                 User loggedInUser = userService.getUserById(authenticatedUserId);
                 User profileUser = userService.getUserById(userId);
+                List<Trip> trips = tripService.getTripsByCreatorId(profileUser);
+
+                List<Trip> completeTrips = trips.stream()
+                        .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
+                        .collect(Collectors.toList());
+
+                List<Trip> incompleteTrips = trips.stream()
+                        .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
+                        .collect(Collectors.toList());
 
                 if (profileUser == null) {
                     throw new IllegalStateException("User not found");
                 }
-
+                completeTrips.sort(Comparator.comparing(Trip::getStartDate));
                 model.addAttribute("loggedInUser", loggedInUser);
                 model.addAttribute("user", profileUser);
                 model.addAttribute("trips", tripService.getTripsByCreatorId(profileUser));
+                model.addAttribute("completeTrips", completeTrips);
+                model.addAttribute("incompleteTrips", incompleteTrips);
 
                 return "profile";
             }
         }
         return "redirect:/index";
     }
-
-    @GetMapping("/offers")
-    public String showOffersPage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
-        if (!authToken.isEmpty()) {
-            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
-            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
-                User loggedInUser = userService.getUserById(authenticatedUserId);
-                User profileUser = userService.getUserById(authenticatedUserId);
-
-                if (profileUser == null) {
-                    throw new IllegalStateException("User not found");
-                }
-                model.addAttribute("loggedInUser", loggedInUser);
-                model.addAttribute("user", profileUser);
-
-                return "offers";
-            }
-        }
-
-        return "redirect:/index";
-    }
 }
-
