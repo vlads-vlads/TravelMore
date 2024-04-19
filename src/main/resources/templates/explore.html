@@ -107,6 +107,7 @@
             color: #aaa;
         }
                 .footer {
+            margin-top: auto;
             background-color: #f8f9fa;
             padding: 20px;
             text-align: center;
@@ -214,7 +215,9 @@
     </div>
 </nav>
 
-
+<div class="button-container" style="text-align: center; margin-top: 20px;">
+    <button class="btn btn-info" id="toggleButton2" onclick="toggleViews();">Toggle Trips/Posts</button>
+</div>
 
 <div class="main-container">
     <button class="btn btn-primary btn-post-trip" data-toggle="modal" data-target="#shareTripModal">
@@ -269,13 +272,10 @@
     </div>
 </div>
 
-
-
-
-<div class="content-background">
+<div class="content-background" id="tripCardsContainer2">
 <div class="container">
     <div class="row">
-        <div th:each="trip : ${allTrips}" class="col-md-12">
+        <div th:each="trip : ${completeTrips}" class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
@@ -295,6 +295,23 @@
 </div>
 </div>
 
+<div class="content-background" id="postCardsContainer2" style="display: none;">
+    <div class="container">
+        <div class="row">
+            <div th:each="trip : ${incompleteTrips}" class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${loggedInUser.id}}" class="card-link">
+                            <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
+                            <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="footer">
     <a href="#" class="fa fa-instagram"></a>
@@ -305,6 +322,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="/script.js"></script>
 
 </body>
 </html>

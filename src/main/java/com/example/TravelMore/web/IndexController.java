@@ -20,4 +20,11 @@ public class IndexController {
     public String register() {
         return "register";
     }
+
+    @GetMapping("/index")
+    public String logout() {
+        return "logout";
+    }
+
 }
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Trips</title>
+</head>
+<body>
+<h1>User Trips</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Trip ID</th>
+        <th>Destination</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Loop through the user's trips -->
+    <tr th:each="trip : ${userTrips}">
+        <td th:text="${trip.id}">Trip ID</td>
+        <td th:text="${trip.destination}">Destination</td>
+        <td th:text="${#dates.format(trip.startDate, 'yyyy-MM-dd')}">Start Date</td>
+        <td th:text="${#dates.format(trip.endDate, 'yyyy-MM-dd')}">End Date</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

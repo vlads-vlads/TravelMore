@@ -3,15 +3,14 @@ package com.example.TravelMore.trip;
 import com.example.TravelMore.Comment.Comment;
 import com.example.TravelMore.Image.Image;
 import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.joinRequest.JoinRequest;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table
@@ -21,8 +20,6 @@ public class Trip {
     @SequenceGenerator(name = "trip_sequence", sequenceName = "trip_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_sequence")
     private Long id;
-
-    private String name;
 
     private String description;
 
@@ -38,26 +35,34 @@ public class Trip {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "trip_participants", joinColumns = @JoinColumn(name = "trip_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> participants;
+    @ManyToMany
+    @JoinTable(
+            name = "trip_participants",
+            joinColumns = @JoinColumn(name = "trip_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> participants = new HashSet<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<JoinRequest> joinRequests = new ArrayList<>();
+
     @OneToMany(mappedBy = "trip", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    public Trip(){
-
+    public Trip() {
     }
 
+    public Trip(User creator, String destination, Date startDate, Date endDate, String description) {
+
+    }
     public Trip(List<Comment> comments) {
         this.comments = comments;
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate, String description, List<Comment> comments) {
-        this.name = name;
+    public Trip(User creator, String destination, Date startDate, Date endDate, String description, List<Comment> comments) {
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
@@ -66,8 +71,7 @@ public class Trip {
         this.comments = comments;
     }
 
-    public Trip(String name, User creator, String destination, Date startDate, Date endDate, List<User> participants, String description, List<Comment> comments) {
-        this.name = name;
+    public Trip(User creator, String destination, Date startDate, Date endDate, Set<User> participants, String description, List<Comment> comments) {
         this.creator = creator;
         this.destination = destination;
         this.startDate = startDate;
@@ -92,14 +96,6 @@ public class Trip {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public User getCreator() {
@@ -134,11 +130,11 @@ public class Trip {
         this.endDate = endDate;
     }
 
-    public List<User> getParticipants() {
+    public Set<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<User> participants) {
+    public void setParticipants(Set<User> participants) {
         this.participants = participants;
     }
 
@@ -153,6 +149,14 @@ public class Trip {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<JoinRequest> getJoinRequests() {
+        return joinRequests;
+    }
+
+    public void setJoinRequests(List<JoinRequest> joinRequests) {
+        this.joinRequests = joinRequests;
     }
 }
 
