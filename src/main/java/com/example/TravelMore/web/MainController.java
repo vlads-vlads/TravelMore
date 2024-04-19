@@ -59,7 +59,7 @@ public class MainController {
         }
         User loggedInUser = userService.getUserById(user.getId());
 
-        List<Trip> trips = tripService.getTripsByCreatorId(user);
+        List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
 
         trips.sort(Comparator.comparing(Trip::getStartDate));
         model.addAttribute("user", user);
@@ -75,12 +75,17 @@ public class MainController {
         if (!authToken.isEmpty()) {
             Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
 
+//            if (user != null) {
+//                List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
+//                trips.sort(Comparator.comparing(Trip::getStartDate));
+//                model.addAttribute("user", user);
+//                model.addAttribute("trips", trips);
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
                 User loggedInUser = userService.getUserById(authenticatedUserId);
 
                 User user = userService.getUserById(authenticatedUserId);
                 if (user != null) {
-                    List<Trip> trips = tripService.getTripsByCreatorId(user);
+                    List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
                     trips.sort(Comparator.comparing(Trip::getStartDate));
                     model.addAttribute("user", user);
                     model.addAttribute("trips", trips);
@@ -156,7 +161,7 @@ public class MainController {
 
                 model.addAttribute("loggedInUser", loggedInUser);
                 model.addAttribute("user", profileUser);
-                model.addAttribute("trips", tripService.getTripsByCreatorId(profileUser));
+                model.addAttribute("trips", tripService.getTripsCreatedByUser(profileUser.getId()));
 
                 return "profile";
             }
