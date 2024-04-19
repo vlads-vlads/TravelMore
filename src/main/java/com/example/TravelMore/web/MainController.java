@@ -10,7 +10,9 @@ import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripService;
 import com.example.TravelMore.util.JwtTokenUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -161,4 +163,20 @@ public class MainController {
         }
         return "redirect:/index";
     }
+
+    @GetMapping("/logout")
+    public String logoutPage(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/index";
+    }
+
+    @GetMapping("/custom-logout")
+    public String customLogout(HttpServletRequest request) {
+
+        return "redirect:/index";
+    }
+
 }
