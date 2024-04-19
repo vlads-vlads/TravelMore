@@ -10,5 +10,8 @@ import java.util.List;
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
     List<Trip> findByCreator(User creator);
+    List<Trip> findByParticipantsId(Long userId);
+
+    List<Trip> findByCreatorId(Long userId);
 
 }

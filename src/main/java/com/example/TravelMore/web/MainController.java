@@ -58,7 +58,7 @@ public class MainController {
             return "register";
         }
 
-        List<Trip> trips = tripService.getTripsByCreatorId(user);
+        List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
 
         for (Trip trip : trips) {
             List<Image> images = imageService.getImagesByTrip(trip);
@@ -79,7 +79,7 @@ public class MainController {
             User user = userService.getUserById(userId);
 
             if (user != null) {
-                List<Trip> trips = tripService.getTripsByCreatorId(user);
+                List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
                 trips.sort(Comparator.comparing(Trip::getStartDate));
                 model.addAttribute("user", user);
                 model.addAttribute("trips", trips);
