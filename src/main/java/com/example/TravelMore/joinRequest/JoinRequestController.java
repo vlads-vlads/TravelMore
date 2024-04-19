@@ -21,7 +21,7 @@ public class JoinRequestController {
 
     @GetMapping("/user/{userId}")
     public String getJoinRequestsForUser(@PathVariable Long userId, Model model) {
-        List<JoinRequest> joinRequests = joinRequestService.getJoinRequestsForUser(userId);
+        List<JoinRequest> joinRequests = joinRequestService.getJoinRequestsForUserRequester(userId);
         model.addAttribute("joinRequests", joinRequests);
         return "joinRequests"; // Return the view name
     }
@@ -43,7 +43,7 @@ public class JoinRequestController {
         joinRequestService.sendJoinRequestToUser(tripId, tripCreatorId, receiverUserId);
         // Add a success message or any other attributes to be displayed on the redirected page
         redirectAttributes.addFlashAttribute("message", "Join request sent successfully.");
-        return "redirect:/"; // Redirect to home page or any other appropriate view
+        return "redirect:/main"; // Redirect to home page or any other appropriate view
     }
 
     @GetMapping("/{tripId}/join-requests")
@@ -51,6 +51,20 @@ public class JoinRequestController {
         List<JoinRequest> joinRequests = joinRequestService.getJoinRequestsForTrip(tripId);
         model.addAttribute("joinRequests", joinRequests);
         return "joinRequests"; // Return the view name
+    }
+
+    @PostMapping("/approve")
+    public String approveJoinRequest(@RequestParam("requestId") Long requestId, RedirectAttributes redirectAttributes) {
+        joinRequestService.approveJoinRequest(requestId);
+        redirectAttributes.addFlashAttribute("successMessage", "Join request approved successfully");
+        return "redirect:/offers";
+    }
+
+    @PostMapping("/decline")
+    public String declineJoinRequest(@RequestParam("requestId") Long requestId, RedirectAttributes redirectAttributes) {
+        joinRequestService.declineJoinRequest(requestId);
+        redirectAttributes.addFlashAttribute("successMessage", "Join request declined successfully");
+        return "redirect:/offers";
     }
 
 }

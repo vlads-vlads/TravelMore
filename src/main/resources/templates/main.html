@@ -356,6 +356,7 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                     <div class="card-body">
+                        <img id="tripImageDisplay-${trip.id}" src="">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
                             <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                             <p class="card-text" th:text="${trip.getDestination()}">Destination</p>

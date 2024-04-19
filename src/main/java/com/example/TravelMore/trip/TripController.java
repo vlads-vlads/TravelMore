@@ -62,13 +62,10 @@ public class TripController {
             Date startDate = null;
             Date endDate = null;
 
-            // Only set the start date if the start date string is not null/empty
             if (startDateString != null && !startDateString.trim().isEmpty()) {
                 startDate = dateFormat.parse(startDateString);
                 trip.setStartDate(startDate);
             }
-
-            // Only set the end date if the end date string is not null/empty
             if (endDateString != null && !endDateString.trim().isEmpty()) {
                 endDate = dateFormat.parse(endDateString);
                 trip.setEndDate(endDate);
@@ -78,7 +75,6 @@ public class TripController {
 
             com.example.TravelMore.trip.Trip savedTrip = tripService.addTrip(trip);
 
-            // Only upload files if they are provided
             if (files != null && files.length > 0) {
                 imageService.uploadPhotos(files, savedTrip.getId());
             }

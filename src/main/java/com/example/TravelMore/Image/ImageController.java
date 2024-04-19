@@ -33,4 +33,5 @@ public class ImageController {
         model.addAttribute("photos", photos);
         return "photoList";
     }
+
 }

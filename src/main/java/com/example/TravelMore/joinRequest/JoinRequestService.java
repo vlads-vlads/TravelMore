@@ -48,9 +48,11 @@ public class JoinRequestService {
     }
 
     @Transactional(readOnly = true)
-    public List<JoinRequest> getJoinRequestsForUser(Long userId) {
+    public List<JoinRequest> getJoinRequestsForUserRequester(Long userId) {
         return joinRequestRepository.findByRequesterId(userId);
     }
+
+
 
     @Transactional
     public void sendJoinRequestToUser(Long tripId, Long tripCreatorId, Long receiverUserId) {
@@ -72,4 +74,23 @@ public class JoinRequestService {
         return joinRequestRepository.findByTripId(tripId);
     }
 
+    public List<JoinRequest> getAllJoinRequests() {
+       return joinRequestRepository.findAll();
+    }
+
+    public void approveJoinRequest(Long requestId) {
+        JoinRequest joinRequest = joinRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Join request not found"));
+
+        joinRequest.getTrip().getParticipants().add(joinRequest.getRequester());
+        joinRequestRepository.delete(joinRequest);
+    }
+
+
+    public void declineJoinRequest(Long requestId) {
+        JoinRequest joinRequest = joinRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Join request not found"));
+
+        joinRequestRepository.delete(joinRequest);
+    }
 }
