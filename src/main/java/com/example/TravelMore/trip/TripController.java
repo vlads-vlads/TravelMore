@@ -51,23 +51,37 @@ public class TripController {
     }
 
     @PostMapping("/add")
-    public String addTrip(@Valid @ModelAttribute("trip") Trip trip,
-                          @RequestParam("startDate") String startDateString,
-                          @RequestParam("endDate") String endDateString,
-                          @RequestParam("files[]") MultipartFile[] files,
+    public String addTrip(@Valid @ModelAttribute("trip") com.example.TravelMore.trip.Trip trip,
+                          @RequestParam(value = "startDate", required = false) String startDateString,
+                          @RequestParam(value = "endDate", required = false) String endDateString,
+                          @RequestParam(value = "files[]", required = false) MultipartFile[] files,
                           @RequestParam("description") String description,
                           Model model) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = dateFormat.parse(startDateString);
-            Date endDate = dateFormat.parse(endDateString);
+            Date startDate = null;
+            Date endDate = null;
 
-            trip.setStartDate(startDate);
-            trip.setEndDate(endDate);
+            // Only set the start date if the start date string is not null/empty
+            if (startDateString != null && !startDateString.trim().isEmpty()) {
+                startDate = dateFormat.parse(startDateString);
+                trip.setStartDate(startDate);
+            }
+
+            // Only set the end date if the end date string is not null/empty
+            if (endDateString != null && !endDateString.trim().isEmpty()) {
+                endDate = dateFormat.parse(endDateString);
+                trip.setEndDate(endDate);
+            }
+
             trip.setDescription(description);
 
-            tripService.addTrip(trip);
-            imageService.uploadPhotos(files, trip.getId());
+            com.example.TravelMore.trip.Trip savedTrip = tripService.addTrip(trip);
+
+            // Only upload files if they are provided
+            if (files != null && files.length > 0) {
+                imageService.uploadPhotos(files, savedTrip.getId());
+            }
 
             return "redirect:/main";
         } catch (ParseException | IOException e) {
@@ -75,6 +89,32 @@ public class TripController {
             return "error";
         }
     }
+
+//    @PostMapping("/add")
+//    public String addTrip(@Valid @ModelAttribute("trip") Trip trip,
+//                          @RequestParam("startDate") String startDateString,
+//                          @RequestParam("endDate") String endDateString,
+//                          @RequestParam("files[]") MultipartFile[] files,
+//                          @RequestParam("description") String description,
+//                          Model model) {
+//        try {
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            Date startDate = dateFormat.parse(startDateString);
+//            Date endDate = dateFormat.parse(endDateString);
+//
+//            trip.setStartDate(startDate);
+//            trip.setEndDate(endDate);
+//            trip.setDescription(description);
+//
+//            tripService.addTrip(trip);
+//            imageService.uploadPhotos(files, trip.getId());
+//
+//            return "redirect:/main";
+//        } catch (ParseException | IOException e) {
+//            model.addAttribute("error", "Failed to add trip");
+//            return "error";
+//        }
+//    }
 
     @GetMapping("/{id}/update")
     public String showUpdateTripForm(@PathVariable("id") Long tripId, Model model) {
