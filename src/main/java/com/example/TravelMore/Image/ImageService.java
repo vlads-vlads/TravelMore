@@ -19,17 +19,23 @@
         @Autowired
         private TripService tripService;
 
-        public void uploadPhoto(MultipartFile file, Long tripId) throws IOException {
+        public void uploadPhotos(MultipartFile[] files, Long tripId) throws IOException {
             Trip trip = tripService.getTripById(tripId);
             if (trip != null) {
-                byte[] imageData = file.getBytes();
-                String base64Image = Base64.getEncoder().encodeToString(imageData);
-                Image photo = new Image(base64Image, trip);
-                imageRepository.save(photo);
+                for (MultipartFile file : files) {
+                    if (!file.isEmpty()) {
+                        byte[] imageData = file.getBytes();
+                        String base64Image = Base64.getEncoder().encodeToString(imageData);
+                        Image photo = new Image(base64Image, trip);
+                        imageRepository.save(photo);
+                    }
+                }
             } else {
                 throw new IllegalArgumentException("Trip not found");
             }
         }
+
+
 
 
 

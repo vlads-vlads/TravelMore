@@ -57,16 +57,14 @@ public class MainController {
             model.addAttribute("error", "Invalid username/password");
             return "register";
         }
+        User loggedInUser = userService.getUserById(user.getId());
 
         List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
 
-        for (Trip trip : trips) {
-            List<Image> images = imageService.getImagesByTrip(trip);
-            trip.setImages(images);
-        }
-
+        trips.sort(Comparator.comparing(Trip::getStartDate));
         model.addAttribute("user", user);
         model.addAttribute("trips", trips);
+        model.addAttribute("loggedInUser", loggedInUser);
 
         return "main";
     }
@@ -75,16 +73,26 @@ public class MainController {
     @GetMapping("/main")
     public String mainPage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
         if (!authToken.isEmpty()) {
-            Long userId = jwtTokenUtil.extractUserId(authToken);
-            User user = userService.getUserById(userId);
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
 
-            if (user != null) {
-                List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
-                trips.sort(Comparator.comparing(Trip::getStartDate));
-                model.addAttribute("user", user);
-                model.addAttribute("trips", trips);
+//            if (user != null) {
+//                List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
+//                trips.sort(Comparator.comparing(Trip::getStartDate));
+//                model.addAttribute("user", user);
+//                model.addAttribute("trips", trips);
+            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
+                User loggedInUser = userService.getUserById(authenticatedUserId);
 
-                return "main";
+                User user = userService.getUserById(authenticatedUserId);
+                if (user != null) {
+                    List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
+                    trips.sort(Comparator.comparing(Trip::getStartDate));
+                    model.addAttribute("user", user);
+                    model.addAttribute("trips", trips);
+                    model.addAttribute("loggedInUser", loggedInUser);
+
+                    return "main";
+                }
             }
         }
         return "redirect:/index";
@@ -94,13 +102,17 @@ public class MainController {
     @GetMapping("/explore")
     public String explorePage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
         if (!authToken.isEmpty()) {
-            Long userId = jwtTokenUtil.extractUserId(authToken);
-            if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
-                User user = userService.getUserById(userId);
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
+
+            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
+                User loggedInUser = userService.getUserById(authenticatedUserId);
+                User user = userService.getUserById(authenticatedUserId);
                 if (user != null) {
                     List<Trip> allTrips = tripService.getAllTrips();
+                    allTrips.sort(Comparator.comparing(Trip::getStartDate));
                     model.addAttribute("user", user);
                     model.addAttribute("allTrips", allTrips);
+                    model.addAttribute("loggedInUser", loggedInUser);
                     return "explore";
                 } else {
                     return "redirect:/index";
@@ -114,14 +126,18 @@ public class MainController {
     public String tripCardPage(@RequestParam("tripId") Long tripId, @RequestParam("userId") Long userId, Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
         if (!authToken.isEmpty()) {
             Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
-            if (authenticatedUserId != null && authenticatedUserId.equals(userId) && jwtTokenUtil.validateToken(authToken, userId)) {
+            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
+                User loggedInUser = userService.getUserById(authenticatedUserId);
                 Trip trip = tripService.getTripById(tripId);
                 User user = userService.getUserById(userId);
 
                 if (trip != null && user != null) {
                     List<Comment> comments = commentService.getCommentsForTrip(tripId);
+                    List<Image> images = imageService.getImagesByTrip(trip);
+                    model.addAttribute("images", images);
                     model.addAttribute("trip", trip);
                     model.addAttribute("user", user);
+                    model.addAttribute("loggedInUser", loggedInUser);
                     model.addAttribute("comments", comments);
                     return "tripcard";
                 }
@@ -130,4 +146,48 @@ public class MainController {
         return "redirect:/index";
     }
 
+
+    @GetMapping("/profile/{userId}")
+    public String userProfile(@PathVariable Long userId, Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+        if (!authToken.isEmpty()) {
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
+            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
+                User loggedInUser = userService.getUserById(authenticatedUserId);
+                User profileUser = userService.getUserById(userId);
+
+                if (profileUser == null) {
+                    throw new IllegalStateException("User not found");
+                }
+
+                model.addAttribute("loggedInUser", loggedInUser);
+                model.addAttribute("user", profileUser);
+                model.addAttribute("trips", tripService.getTripsCreatedByUser(profileUser.getId()));
+
+                return "profile";
+            }
+        }
+        return "redirect:/index";
+    }
+
+    @GetMapping("/offers")
+    public String showOffersPage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+        if (!authToken.isEmpty()) {
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
+            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
+                User loggedInUser = userService.getUserById(authenticatedUserId);
+                User profileUser = userService.getUserById(authenticatedUserId);
+
+                if (profileUser == null) {
+                    throw new IllegalStateException("User not found");
+                }
+                model.addAttribute("loggedInUser", loggedInUser);
+                model.addAttribute("user", profileUser);
+
+                return "offers";
+            }
+        }
+
+        return "redirect:/index";
+    }
 }
+
