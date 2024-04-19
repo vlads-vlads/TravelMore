@@ -59,7 +59,7 @@ public class TripController {
     public String addTrip(@Valid @ModelAttribute("trip") Trip trip,
                           @RequestParam("startDate") String startDateString,
                           @RequestParam("endDate") String endDateString,
-                          @RequestParam("file") MultipartFile file,
+                          @RequestParam("files[]") MultipartFile[] files,
                           @RequestParam("description") String description,
                           Model model) {
         try {
@@ -67,16 +67,12 @@ public class TripController {
             Date startDate = dateFormat.parse(startDateString);
             Date endDate = dateFormat.parse(endDateString);
 
-
             trip.setStartDate(startDate);
             trip.setEndDate(endDate);
             trip.setDescription(description);
 
             tripService.addTrip(trip);
-
-            if (!file.isEmpty()) {
-                imageService.uploadPhoto(file, trip.getId());
-            }
+            imageService.uploadPhotos(files, trip.getId());
 
             return "redirect:/main";
         } catch (ParseException | IOException e) {
@@ -128,4 +124,73 @@ public class TripController {
         return "tripDetails";
     }
 
+
+    // CURRENTLY NOT WORKING (UPDATING TRIPS)
+//    @PostMapping ("/{id}/edit")
+//    public String updateTrip(@PathVariable Long id,
+//                             @RequestParam(value = "destination", required = false) String destination,
+//                             @RequestParam(value = "startDate", required = false) String startDate,
+//                             @RequestParam(value = "endDate", required = false) String endDate,
+//                             @RequestParam(value = "description", required = false) String description,
+//                             @RequestParam(value = "file", required = false) MultipartFile file,
+//                             @RequestParam("user") Long userId,
+//                             Model model) {
+//
+//        Trip tripToUpdate = tripService.getTripById(id);
+//
+//        if (tripToUpdate == null) {
+//            model.addAttribute("error", "Trip not found");
+//            return "error-page";
+//        }
+//
+//        if (!tripToUpdate.getCreator().getId().equals(userId)) {
+//            model.addAttribute("error", "You are not authorized to update this trip");
+//            return "error-page";
+//        }
+//
+//        Date parsedStartDate = null;
+//        Date parsedEndDate = null;
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//        try {
+//            if (startDate != null) {
+//                parsedStartDate = dateFormat.parse(startDate);
+//                tripToUpdate.setStartDate(parsedStartDate);
+//            }
+//            if (endDate != null) {
+//                parsedEndDate = dateFormat.parse(endDate);
+//                tripToUpdate.setEndDate(parsedEndDate);
+//            }
+//        } catch (ParseException e) {
+//            model.addAttribute("error", "Invalid date format");
+//            return "error-page";
+//        }
+//
+//        if (destination != null) {
+//            tripToUpdate.setDestination(destination);
+//        }
+//        if (description != null) {
+//            tripToUpdate.setDescription(description);
+//        }
+//        if (file != null && !file.isEmpty()) {
+//            try {
+//                imageService.uploadPhoto(file, tripToUpdate.getId());
+//            } catch (IOException e) {
+//                model.addAttribute("error", "Error uploading image: " + e.getMessage());
+//                return "error-page";
+//            }
+//        }
+//
+//        try {
+//            tripService.addTrip(tripToUpdate);
+//        } catch (Exception e) {
+//            model.addAttribute("error", "Error saving trip: " + e.getMessage());
+//            return "error-page";
+//        }
+//
+//        return "redirect:/main";
+//    }
 }
+
+
+

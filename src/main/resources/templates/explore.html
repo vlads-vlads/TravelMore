@@ -196,7 +196,7 @@
                     <a class="nav-link" th:href="@{/explore}">Explore</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Offers</a>
+                    <a class="nav-link" th:href="@{/offers}">Offers</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -214,12 +214,14 @@
     </div>
 </nav>
 
+
+
 <div class="main-container">
     <button class="btn btn-primary btn-post-trip" data-toggle="modal" data-target="#shareTripModal">
         Add a Trip
     </button>
 </div>
-<div class="modal fade" id="shareTripModal" tabindex="-1" role="dialog" aria-labelledby="shareTripModalLabel" aria-hidden="true">
+<div class="modal fade" id="shareTripModal" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -230,6 +232,7 @@
             </div>
             <div class="modal-body">
                 <form id="shareTripForm" th:action="@{/trips/add}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="editTripId" name="tripId">
                     <input type="hidden" name="creator" th:value="${user.getId()}">
                     <div class="form-group">
                         <label for="tripName">Destination</label>
@@ -254,17 +257,21 @@
                     </div>
                     <div class="form-group">
                         <label for="tripImage">Trip Image</label>
-                        <input type="file" class="form-control-file" id="tripImage" name="file">
+                        <input type="file" class="form-control-file" id="tripImage" name="files[]" multiple>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" form="shareTripForm">Add</button>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
 <div class="content-background">
 <div class="container">
     <div class="row">
