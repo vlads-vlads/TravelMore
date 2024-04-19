@@ -21,27 +21,6 @@ public class ImageController {
     @Autowired
     private TripService tripService;
 
-    @PostMapping("/upload-photo")
-    public String uploadPhoto(@RequestParam("file") MultipartFile file, @RequestParam("tripId") Long tripId, Model model) {
-        try {
-            if (file.isEmpty()) {
-                model.addAttribute("error", "File is empty");
-                return "uploadError";
-            }
-
-
-            if (!file.isEmpty()) {
-                imageService.uploadPhoto(file, tripId);
-            }
-
-            model.addAttribute("message", "Photo uploaded successfully");
-            return "uploadSuccess";
-        } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("error", "Failed to upload photo");
-            return "uploadError";
-        }
-    }
 
     @GetMapping("/trip/{tripId}/photos")
     public String getAllPhotosForTrip(@PathVariable Trip trip, Model model) {

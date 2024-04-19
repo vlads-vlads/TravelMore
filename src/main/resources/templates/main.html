@@ -171,6 +171,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        .avatar-img {
+         width: 80px;
+         height: 80px;
+         margin-left: auto;
+         margin-right: 20px;
+}
+
     </style>
 </head>
 <body>
@@ -207,7 +214,7 @@
                     <a class="nav-link" th:href="@{/explore}">Explore</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Offers</a>
+                    <a class="nav-link" th:href="@{/offers}">Offers</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -221,9 +228,12 @@
                     </div>
                 </li>
             </ul>
+            <img src="/images/creep.jpg" alt="Profile Picture" class="rounded-circle avatar-img">
         </div>
     </div>
 </nav>
+
+
 
 <div class="main-container">
     <button class="btn btn-primary btn-post-trip" data-toggle="modal" data-target="#shareTripModal">
@@ -246,10 +256,7 @@
                     <div class="form-group">
                         <label for="tripName">Destination</label>
                         <select class="form-control" id="tripName" name="destination">
-                            <option value="Spain">Spain</option>
-                            <option value="Germany">Germany</option>
-                            <option value="Italy">Italy</option>
-                            <option value="Greece">Greece</option>
+
                         </select>
                     </div>
                     <div class="form-group">
@@ -266,17 +273,18 @@
                     </div>
                     <div class="form-group">
                         <label for="tripImage">Trip Image</label>
-                        <input type="file" class="form-control-file" id="tripImage" name="file">
+                        <input type="file" class="form-control-file" id="tripImage" name="files[]" multiple>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" form="shareTripForm">Add</button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <div class="modal fade" id="editTripModal2" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel" aria-hidden="true">
@@ -289,8 +297,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editTripForm" th:action="@{'/trips/edit/' + ${trip.id}}" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="user" th:value="${user.getId()}">
+                <form id="editTripForm" th:action="@{/trips/edit}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="creator" th:value="${user.getId()}">
                     <div class="form-group">
                         <label for="tripName">Destination</label>
                         <select class="form-control" id="tripNameEdit" name="destination">
@@ -327,33 +335,31 @@
 </div>
 
 <div class="content-background">
-<div class="container">
-    <div class="row">
-        <div th:each="trip, iterStat : ${trips}" class="col-md-12">
-            <div class="card">
-                <form th:action="@{'/trips/' + ${trip.id} + '/remove'}" method="post">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-                <div class="card-body">
-                    <a href="#editTripModal2" class="btn btn-primary btn-edit-trip" data-toggle="modal" >Edit</a>
-                    <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
-                        <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
-                        <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
-                        <p class="card-text">
-                            <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
-                            <span>/</span>
-                            <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
-                        </p>
-                        <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
-                    </a>
+    <div class="container">
+        <div class="row">
+            <div th:each="trip, iterStat : ${trips}" class="col-md-12">
+                <div class="card">
+                    <form th:action="@{'/trips/' + ${trip.id} + '/remove'}" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <div class="card-body">
+                        <a href="#editTripModal2" class="btn btn-primary btn-edit-trip" data-toggle="modal" onclick="populateEditForm(${trip.id})">Edit</a>
+                        <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
+                            <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
+                            <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+                            <p class="card-text">
+                                <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
+                                <span>/</span>
+                                <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
+                            </p>
+                            <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-
-
 
 <div class="footer">
     <a href="#" class="fa fa-instagram"></a>
@@ -364,6 +370,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="/script.js"></script>
 
 
 

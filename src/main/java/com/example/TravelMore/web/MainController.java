@@ -78,15 +78,15 @@ public class MainController {
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
                 User loggedInUser = userService.getUserById(authenticatedUserId);
 
-            User user = userService.getUserById(authenticatedUserId);
-            if (user != null) {
-                List<Trip> trips = tripService.getTripsByCreatorId(user);
-                trips.sort(Comparator.comparing(Trip::getStartDate));
-                model.addAttribute("user", user);
-                model.addAttribute("trips", trips);
-                model.addAttribute("loggedInUser", loggedInUser);
+                User user = userService.getUserById(authenticatedUserId);
+                if (user != null) {
+                    List<Trip> trips = tripService.getTripsByCreatorId(user);
+                    trips.sort(Comparator.comparing(Trip::getStartDate));
+                    model.addAttribute("user", user);
+                    model.addAttribute("trips", trips);
+                    model.addAttribute("loggedInUser", loggedInUser);
 
-                return "main";
+                    return "main";
                 }
             }
         }
@@ -128,6 +128,8 @@ public class MainController {
 
                 if (trip != null && user != null) {
                     List<Comment> comments = commentService.getCommentsForTrip(tripId);
+                    List<Image> images = imageService.getImagesByTrip(trip);
+                    model.addAttribute("images", images);
                     model.addAttribute("trip", trip);
                     model.addAttribute("user", user);
                     model.addAttribute("loggedInUser", loggedInUser);
@@ -161,4 +163,26 @@ public class MainController {
         }
         return "redirect:/index";
     }
+
+    @GetMapping("/offers")
+    public String showOffersPage(Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+        if (!authToken.isEmpty()) {
+            Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
+            if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
+                User loggedInUser = userService.getUserById(authenticatedUserId);
+                User profileUser = userService.getUserById(authenticatedUserId);
+
+                if (profileUser == null) {
+                    throw new IllegalStateException("User not found");
+                }
+                model.addAttribute("loggedInUser", loggedInUser);
+                model.addAttribute("user", profileUser);
+
+                return "offers";
+            }
+        }
+
+        return "redirect:/index";
+    }
 }
+
