@@ -15,14 +15,14 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
+            background: url('https://images.pexels.com/photos/221471/pexels-photo-221471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
             background-size: cover;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-
         }
+
         body::before {
             content: '';
             position: fixed;
@@ -38,6 +38,7 @@
             filter: blur(4px);
             transition: opacity 0.5s linear;
         }
+
         .navbar {
             background-color: #f8f9fa;
             padding-top: 0;
@@ -104,12 +105,15 @@
         .card:hover {
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
         }
+
         .card-body {
             padding: 14px;
         }
+
         .card .fa {
             color: #aaa;
         }
+
         .footer {
             margin-top: auto;
             background-color: #f8f9fa;
@@ -117,6 +121,7 @@
             text-align: center;
             width: 100%;
         }
+
         .footer .fa {
             padding: 10px;
             font-size: 20px;
@@ -126,13 +131,16 @@
             margin: 5px 2px;
             border-radius: 50%;
         }
+
         .footer .fa:hover {
             opacity: 0.7;
         }
+
         .fa-facebook {
             background: #3B5998;
             color: white;
         }
+
         .fa-twitter {
             background: #55ACEE;
             color: white;
@@ -173,25 +181,36 @@
         }
 
         .content-background {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 600px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-.request-item {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-}
+        .request-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
 
-.request-item:hover {
-    background-color: #f5f5f5;
-}
+        .request-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .avatar-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
     </style>
 </head>
@@ -243,6 +262,7 @@
                     </div>
                 </li>
             </ul>
+            <img src="/images/FjU2lkcWYAgNG6d.jpg" alt="Profile Picture" class="rounded-circle avatar-img">
         </div>
     </div>
 </nav>

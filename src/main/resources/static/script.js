@@ -45,7 +45,7 @@ window.onload = fetchCountries;
 
 document.addEventListener('DOMContentLoaded', function() {
     function toggleCards() {
-        var tripCardsContainer = document.getElementById('tripCardsContainer');
+        var tripCardsContainer = document.getElementById('tripCardsContainer',);
         var postCardsContainer = document.getElementById('postCardsContainer');
         if (tripCardsContainer.style.display === 'none') {
             tripCardsContainer.style.display = 'block';
@@ -92,6 +92,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (document.getElementById('toggleButton3')) {
             document.getElementById('toggleButton3').addEventListener('click', toggleCards3);
         }
+
+    function toggleCards4() {
+                var tripCardsContainer4 = document.getElementById('tripCardsContainer4');
+                var postCardsContainer4 = document.getElementById('postCardsContainer4');
+                if (tripCardsContainer4.style.display === 'none') {
+                    tripCardsContainer4.style.display = 'block';
+                    postCardsContainer4.style.display = 'none';
+                } else {
+                    tripCardsContainer4.style.display = 'none';
+                    postCardsContainer4.style.display = 'block';
+                }
+            }
+
+            if (document.getElementById('toggleButton4')) {
+                document.getElementById('toggleButton4').addEventListener('click', toggleCards4);
+            }
 });
 
 
