@@ -41,6 +41,10 @@ public class JoinRequest {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public User getRequester() {
         return requester;
     }
