@@ -60,7 +60,7 @@ public class MainController {
         }
         User loggedInUser = userService.getUserById(user.getId());
 
-        List<Trip> trips = tripService.getTripsByCreatorId(user);
+        List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
 
         List<Trip> completeTrips = trips.stream()
                 .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
@@ -90,7 +90,7 @@ public class MainController {
 
                 User user = userService.getUserById(authenticatedUserId);
                 if (user != null) {
-                    List<Trip> trips = tripService.getTripsByCreatorId(user);
+                    List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
 
                     List<Trip> completeTrips = trips.stream()
                             .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
@@ -175,7 +175,7 @@ public class MainController {
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
                 User loggedInUser = userService.getUserById(authenticatedUserId);
                 User profileUser = userService.getUserById(userId);
-                List<Trip> trips = tripService.getTripsByCreatorId(profileUser);
+                List<Trip> trips = tripService.getTripsCreatedByUser(profileUser.getId());
 
                 List<Trip> completeTrips = trips.stream()
                         .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
@@ -191,7 +191,7 @@ public class MainController {
                 completeTrips.sort(Comparator.comparing(Trip::getStartDate));
                 model.addAttribute("loggedInUser", loggedInUser);
                 model.addAttribute("user", profileUser);
-                model.addAttribute("trips", tripService.getTripsByCreatorId(profileUser));
+                model.addAttribute("trips", tripService.getTripsCreatedByUser(profileUser.getId()));
                 model.addAttribute("completeTrips", completeTrips);
                 model.addAttribute("incompleteTrips", incompleteTrips);
 

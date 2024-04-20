@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
+            background: url('https://images.pexels.com/photos/6118746/pexels-photo-6118746.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
             background-size: cover;
             overflow-x: hidden;
             display: flex;
@@ -35,7 +35,7 @@
             background: inherit;
             width: 100%;
             height: 100%;
-            filter: blur(4px);
+            filter: blur(3px);
             transition: opacity 0.5s linear;
         }
         .navbar {
@@ -70,8 +70,10 @@
             transition: 0.3s;
             border: none;
             margin: 12px auto;
-            width: 460px;
+            width: 440px;
             position:relative;
+            height: 160px;
+            overflow: hidden;
         }
 
         .row {
@@ -143,6 +145,7 @@
             top: 22px;
             right: 22px;
             margin-left: 0;
+            z-index: 1;
         }
 
         .duration {
@@ -157,7 +160,7 @@
         }
 
         .content-background {
-            background-color: rgba(255, 255, 255, 0.4);
+            background-color: #f8f9fa;
             padding: 20px;
             margin: 20px auto;
             max-width: 600px;
@@ -168,12 +171,12 @@
         .avatar-img {
             width: 80px;
             height: 80px;
-            border-radius: 50%; /* Makes the image round */
-    object-fit: cover; /* Ensures the image covers the area without being stretched */
-    object-position: center; /* Centers the image within the element */
-    display: block; /* Makes it a block element to fill the container */
-    margin-left: auto;
-    margin-right: auto;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .btn-toggle {
@@ -190,7 +193,34 @@
             background-color: #0056b3;
         }
 
+
+        .card-body {
+            position: relative;
+            overflow: hidden;
+            padding: 0;
         }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            color: white;
+        }
+
 
     </style>
 </head>
@@ -356,23 +386,30 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                     <div class="card-body">
+                        <img class="card-image" id="tripImageDisplay-${trip.id}" src="">
+                        <div class="card-overlay">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
-                            <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
-                            <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
-                            <p class="card-text">
-                                <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
-                                <span>/</span>
-                                <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
-                            </p>
-                            <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
-                        </a>
+                            <div>
+                                <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}"Username></h5>
+                                <p class="card-text card-background" th:text="${trip.getDestination()}">Destination</p>
+                            </div>
+                            <div>
+                                <p class="card-text">
+                                    <span th:text="${#dates.format(trip.getStartDate(), 'yyyy.MM.dd')}">Trip Start Date</span>
+                                    <span>/</span>
+                                    <span th:text="${#dates.format(trip.getEndDate(), 'yyyy.MM.dd')}">Trip End Date</span>
+                                </p>
+                                <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
+                            </div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <div class="content-background" id="postCardsContainer" style="display: none;">
     <div class="container">
