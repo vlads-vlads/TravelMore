@@ -6,9 +6,14 @@
     import org.springframework.stereotype.Service;
     import org.springframework.web.multipart.MultipartFile;
 
+    import java.io.ByteArrayOutputStream;
     import java.io.IOException;
     import java.util.Base64;
     import java.util.List;
+
+    import java.io.ByteArrayInputStream;
+    import javax.imageio.ImageIO;
+    import net.coobird.thumbnailator.Thumbnails;
 
     @Service
     public class ImageService {
@@ -34,9 +39,6 @@
                 throw new IllegalArgumentException("Trip not found");
             }
         }
-
-
-
 
 
         public List<Image> getImagesByTrip(Trip trip) {

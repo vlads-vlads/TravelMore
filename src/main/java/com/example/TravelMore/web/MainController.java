@@ -5,6 +5,8 @@ import com.example.TravelMore.Image.Image;
 import com.example.TravelMore.Image.ImageService;
 import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.UserAccount.UserService;
+import com.example.TravelMore.joinRequest.JoinRequest;
+import com.example.TravelMore.joinRequest.JoinRequestService;
 import com.example.TravelMore.model.LoginRequest;
 import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripService;
@@ -32,13 +34,17 @@ public class MainController {
 
     private final ImageService imageService;
 
+    private final JoinRequestService joinRequestService;
+
     @Autowired
-    public MainController(UserService userService, TripService tripService, CommentService commentService, JwtTokenUtil jwtTokenUtil, ImageService imageService) {
+    public MainController(UserService userService, TripService tripService, CommentService commentService, JwtTokenUtil jwtTokenUtil, ImageService imageService, JoinRequestService joinRequestService) {
         this.userService = userService;
         this.tripService = tripService;
         this.commentService = commentService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.imageService = imageService;
+
+        this.joinRequestService = joinRequestService;
     }
 
     @PostMapping("/main")
@@ -207,11 +213,20 @@ public class MainController {
             Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
                 User loggedInUser = userService.getUserById(authenticatedUserId);
-                User profileUser = userService.getUserById(authenticatedUserId);
-
+                User profileUser = userService.getUserById(loggedInUser.getId());
                 if (profileUser == null) {
                     throw new IllegalStateException("User not found");
                 }
+                List<JoinRequest> allRequests = joinRequestService.getAllJoinRequests();
+
+                List<JoinRequest> filteredRequests = new ArrayList<>();
+                for (JoinRequest request : allRequests) {
+                    if (request.getRequester().getId().equals(profileUser.getId())) {
+                        filteredRequests.add(request);
+                    }
+                }
+
+                model.addAttribute("requests", filteredRequests);
                 model.addAttribute("loggedInUser", loggedInUser);
                 model.addAttribute("user", profileUser);
 

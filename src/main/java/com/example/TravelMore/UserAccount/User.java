@@ -25,6 +25,9 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Transient
+    private String defaultProfilePicturePath = "classpath:/static/images/man.png";;
+
     private String userName;
 
     private String userEmail;
@@ -48,6 +51,7 @@ public class User {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+
     }
 
 

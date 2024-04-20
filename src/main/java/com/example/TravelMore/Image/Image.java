@@ -27,6 +27,10 @@ public class Image {
         this.trip = trip;
     }
 
+    public Image(String base64Image) {
+
+    }
+
     // Getters and setters
     public Long getId() {
         return id;

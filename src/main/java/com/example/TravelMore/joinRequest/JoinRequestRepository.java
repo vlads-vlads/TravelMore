@@ -9,5 +9,7 @@ import java.util.List;
 public interface JoinRequestRepository extends JpaRepository<JoinRequest, Long> {
 
     List<JoinRequest> findByRequesterId(Long userId);
+    List<JoinRequest> findByReceiverId(Long userId);
     List<JoinRequest> findByTripId(Long tripId);
+
 }

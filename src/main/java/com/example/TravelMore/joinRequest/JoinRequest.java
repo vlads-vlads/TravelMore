@@ -17,7 +17,7 @@ public class JoinRequest {
     private Trip trip;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "requester_id")
     private User requester;
 
     @ManyToOne

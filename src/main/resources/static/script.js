@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tripCards.forEach(function(card) {
             const tripId = card.querySelector('img').id.split('-')[1];
             const destination = card.querySelector('.card-text').textContent.trim();
-            fetchRandomImage(destination, tripId, card);
+//            fetchRandomImage(destination, tripId, card);
         });
     });
 });
@@ -93,5 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('toggleButton3').addEventListener('click', toggleCards3);
         }
 });
+
 
 

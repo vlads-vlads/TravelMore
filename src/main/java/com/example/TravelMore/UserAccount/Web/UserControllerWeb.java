@@ -136,12 +136,12 @@ public class UserControllerWeb {
         return "participatedTrips"; // Return the view name
     }
 
-    @GetMapping("/{userId}/join-requests")
-    public String getJoinRequestsForUser(@PathVariable Long userId, Model model) {
-        List<JoinRequest> joinRequests = joinRequestService.getJoinRequestsForUser(userId);
-        model.addAttribute("joinRequests", joinRequests);
-        return "joinRequests"; // Return the view name
-    }
+//    @GetMapping("/{userId}/join-requests")
+//    public String getJoinRequestsForUser(@PathVariable Long userId, Model model) {
+//        List<JoinRequest> joinRequests = joinRequestService.getJoinRequestsForUser(userId);
+//        model.addAttribute("joinRequests", joinRequests);
+//        return "joinRequests"; // Return the view name
+//    }
 
     @GetMapping("/{userId}/created-trips")
     public String getCreatedTrips(@PathVariable Long userId, Model model) {
