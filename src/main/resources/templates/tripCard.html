@@ -139,7 +139,7 @@
     color: #333;
 }
 
-        .profile-pics-container {
+    .profile-pics-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -311,22 +311,20 @@
                 </div>
 
                 <div class="profile-pics-container">
-                    <h3>Profiles</h3>
-                    <div class="row">
-                        <!-- Iterate over profile pictures and display them -->
-                        <div th:each="profilePic : ${profilePics}" class="col-6 col-md-4 col-lg-3">
-                            <div class="profile-pic">
-                                <img th:src="${profilePic.url}" alt="Profile Pic">
-                            </div>
+                    <div th:each="participant : ${participants}" class="col-6 col-md-4 col-lg-3">
+                        <div class="profile-pic">
+                            <img th:src="${participant.getUrl()}" alt="Profile Pic">
+                            <span th:text="${participant.getUserName()}"></span>
                         </div>
                     </div>
                 </div>
 
+
                 <div class="button-container">
                     <form id="requestForm" th:action="@{/join-requests/send-to-user}" method="post">
                         <input type="hidden" name="tripId" th:value="${trip.id}">
-                        <input type="hidden" name="tripCreatorId" th:value="${trip.getCreator().getId()}">
-                        <input type="hidden" name="receiverUserId" th:value="${loggedInUser.id}">
+                        <input type="hidden" name="receiver" th:value="${trip.getCreator().getId()}">
+                        <input type="hidden" name="requester" th:value="${loggedInUser.id}">
                         <button type="submit" class="btn btn-secondary">Send Request</button>
                     </form>
                 </div>

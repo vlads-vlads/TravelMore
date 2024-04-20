@@ -13,7 +13,6 @@
 
     import java.io.ByteArrayInputStream;
     import javax.imageio.ImageIO;
-    import net.coobird.thumbnailator.Thumbnails;
 
     @Service
     public class ImageService {

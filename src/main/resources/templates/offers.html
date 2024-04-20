@@ -310,18 +310,18 @@
                     <!-- Iterate over the list of requests -->
                     <li class="list-group-item request-item" th:each="request : ${requests}">
                         <!-- Display request details -->
-                        <span th:text="${request}"></span>
+                        <span th:text="${request.getRequester().getUserName()} + ' wants to join you on trip to ' + ${request.getTrip().getDestination()} + ' on ' + ${request.getTrip().getStartDate()} + '. You don\'t mind a little company?'"></span>
                         <!-- Buttons for actions on the request -->
-                        <div>
+                        <div class="button-container">
                             <!-- Button to approve request -->
                             <form th:action="@{/join-requests/approve}" method="post">
                                 <input type="hidden" name="requestId" th:value="${request.id}">
-                                <button type="submit" class="btn btn-success">Approve</button>
+                                <button type="submit" class="btn btn-success rounded-circle">Approve</button>
                             </form>
                             <!-- Button to decline request -->
                             <form th:action="@{/join-requests/decline}" method="post">
                                 <input type="hidden" name="requestId" th:value="${request.id}">
-                                <button type="submit" class="btn btn-danger">Decline</button>
+                                <button type="submit" class="btn btn-danger rounded-circle">Decline</button>
                             </form>
                         </div>
                     </li>
@@ -330,7 +330,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="footer">
     <a href="#" class="fa fa-instagram"></a>

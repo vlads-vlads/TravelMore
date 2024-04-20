@@ -84,8 +84,8 @@ public class TripService {
         User participant = joinRequest.getRequester();
         trip.getParticipants().add(participant);
 
-        joinRequestRepository.save(joinRequest);
         tripRepository.save(trip);
+        joinRequestRepository.delete(joinRequest);
     }
 
     public void declineJoinRequest(Long requestId) {
@@ -109,4 +109,8 @@ public class TripService {
         return trip.getParticipants();
     }
 
+    public boolean isUserParticipantInTrip(Long userId, Long tripId) {
+        Trip trip = tripRepository.findById(tripId).orElse(null);
+        return trip != null && trip.getParticipants().stream().anyMatch(user -> user.getId().equals(userId));
+    }
 }

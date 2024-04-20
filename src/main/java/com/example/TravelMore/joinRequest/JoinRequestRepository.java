@@ -12,4 +12,5 @@ public interface JoinRequestRepository extends JpaRepository<JoinRequest, Long> 
     List<JoinRequest> findByReceiverId(Long userId);
     List<JoinRequest> findByTripId(Long tripId);
 
+    JoinRequest findByTripIdAndReceiverIdAndRequesterId(Long tripId, Long receiverId, Long requesterId);
 }

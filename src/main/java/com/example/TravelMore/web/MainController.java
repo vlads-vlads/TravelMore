@@ -18,10 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -157,6 +154,7 @@ public class MainController {
                 User loggedInUser = userService.getUserById(authenticatedUserId);
                 Trip trip = tripService.getTripById(tripId);
                 User user = userService.getUserById(userId);
+                Set<User> participants = trip.getParticipants();
 
                 if (trip != null && user != null) {
                     List<Comment> comments = commentService.getCommentsForTrip(tripId);
@@ -166,6 +164,7 @@ public class MainController {
                     model.addAttribute("user", user);
                     model.addAttribute("loggedInUser", loggedInUser);
                     model.addAttribute("comments", comments);
+                    model.addAttribute("participants", participants);
                     return "tripcard";
                 }
             }
@@ -217,11 +216,12 @@ public class MainController {
                 if (profileUser == null) {
                     throw new IllegalStateException("User not found");
                 }
+
                 List<JoinRequest> allRequests = joinRequestService.getAllJoinRequests();
 
                 List<JoinRequest> filteredRequests = new ArrayList<>();
                 for (JoinRequest request : allRequests) {
-                    if (request.getRequester().getId().equals(profileUser.getId())) {
+                    if (request.getReceiver().getId().equals(loggedInUser.getId())) {
                         filteredRequests.add(request);
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.TravelMore.joinRequest;
 
+import com.example.TravelMore.trip.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +14,12 @@ import java.util.List;
 public class JoinRequestController {
 
     private final JoinRequestService joinRequestService;
+    private  final TripService tripService;
 
     @Autowired
-    public JoinRequestController(JoinRequestService joinRequestService) {
+    public JoinRequestController(JoinRequestService joinRequestService, TripService tripService) {
         this.joinRequestService = joinRequestService;
+        this.tripService = tripService;
     }
 
     @GetMapping("/user/{userId}")
@@ -39,11 +42,25 @@ public class JoinRequestController {
     }
 
     @PostMapping("/send-to-user")
-    public String sendJoinRequestToUser(@RequestParam Long tripId, @RequestParam Long tripCreatorId, @RequestParam Long receiverUserId, RedirectAttributes redirectAttributes) {
-        joinRequestService.sendJoinRequestToUser(tripId, tripCreatorId, receiverUserId);
-        // Add a success message or any other attributes to be displayed on the redirected page
+    public String sendJoinRequestToUser(@RequestParam Long tripId, @RequestParam Long receiver, @RequestParam Long requester, RedirectAttributes redirectAttributes) {
+        if (requester.equals(receiver)) {
+            redirectAttributes.addFlashAttribute("error", "You cannot send a join request to yourself.");
+            return "redirect:/main";
+        }
+
+        if (tripService.isUserParticipantInTrip(requester, tripId)) {
+            redirectAttributes.addFlashAttribute("error", "You are already a participant in this trip.");
+            return "redirect:/main";
+        }
+
+        if (joinRequestService.existsJoinRequest(tripId, receiver, requester)) {
+            redirectAttributes.addFlashAttribute("error", "A join request has already been sent to this user for this trip.");
+            return "redirect:/main";
+        }
+
+        joinRequestService.sendJoinRequestToUser(tripId, receiver, requester);
         redirectAttributes.addFlashAttribute("message", "Join request sent successfully.");
-        return "redirect:/main"; // Redirect to home page or any other appropriate view
+        return "redirect:/main";
     }
 
     @GetMapping("/{tripId}/join-requests")

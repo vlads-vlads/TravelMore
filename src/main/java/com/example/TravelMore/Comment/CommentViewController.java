@@ -73,11 +73,11 @@ public class CommentViewController {
             Long userId = jwtTokenUtil.extractUserId(authToken);
             if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
 
-                Comment comment = new Comment();
-                comment.setContent(description);
-
-                commentService.saveComment(comment, tripId);
-
+                if (!description.isBlank()) {
+                    Comment comment = new Comment();
+                    comment.setContent(description);
+                    commentService.saveComment(comment, tripId);
+                }
                 return "redirect:/tripcard?tripId=" + tripId + "&userId=" + userId;
             }
         }

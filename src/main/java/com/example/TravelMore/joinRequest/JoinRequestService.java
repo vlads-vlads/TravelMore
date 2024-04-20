@@ -4,6 +4,7 @@ import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.UserAccount.UserRepository;
 import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripRepository;
+import com.example.TravelMore.trip.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +18,15 @@ public class JoinRequestService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
 
+    private final TripService tripService;
+
 
     @Autowired
-    public JoinRequestService(JoinRequestRepository joinRequestRepository, TripRepository tripRepository, UserRepository userRepository) {
+    public JoinRequestService(JoinRequestRepository joinRequestRepository, TripRepository tripRepository, UserRepository userRepository, TripService tripService) {
         this.joinRequestRepository = joinRequestRepository;
         this.tripRepository = tripRepository;
         this.userRepository = userRepository;
+        this.tripService = tripService;
     }
 
     @Transactional
@@ -55,17 +59,17 @@ public class JoinRequestService {
 
 
     @Transactional
-    public void sendJoinRequestToUser(Long tripId, Long tripCreatorId, Long receiverUserId) {
-        // Fetch trip, trip creator, and receiver user from database
+    public void sendJoinRequestToUser(Long tripId, Long receiver, Long requester) {
+
         Trip trip = tripRepository.findById(tripId).orElseThrow(() -> new RuntimeException("Trip not found"));
-        User tripCreator = userRepository.findById(tripCreatorId).orElseThrow(() -> new RuntimeException("Trip creator not found"));
-        User receiverUser = userRepository.findById(receiverUserId).orElseThrow(() -> new RuntimeException("Receiver user not found"));
+        User requestTo = userRepository.findById(receiver).orElseThrow(() -> new RuntimeException("Trip creator not found"));
+        User requestFrom = userRepository.findById(requester).orElseThrow(() -> new RuntimeException("Receiver user not found"));
 
         // Create and save the join request
         JoinRequest joinRequest = new JoinRequest();
         joinRequest.setTrip(trip);
-        joinRequest.setRequester(tripCreator); // Trip creator is the requester
-        joinRequest.setReceiver(receiverUser);
+        joinRequest.setRequester(requestFrom);
+        joinRequest.setReceiver(requestTo);
         joinRequest.setStatus(JoinRequestStatus.PENDING);
         joinRequestRepository.save(joinRequest);
     }
@@ -78,19 +82,26 @@ public class JoinRequestService {
        return joinRequestRepository.findAll();
     }
 
+    @Transactional
     public void approveJoinRequest(Long requestId) {
         JoinRequest joinRequest = joinRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Join request not found"));
+        tripService.acceptJoinRequest(requestId);
 
-        joinRequest.getTrip().getParticipants().add(joinRequest.getRequester());
-        joinRequestRepository.delete(joinRequest);
     }
 
 
+    @Transactional
     public void declineJoinRequest(Long requestId) {
         JoinRequest joinRequest = joinRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Join request not found"));
 
         joinRequestRepository.delete(joinRequest);
+    }
+
+
+    public boolean existsJoinRequest(Long tripId, Long receiverId, Long requesterId) {
+        JoinRequest joinRequest = joinRequestRepository.findByTripIdAndReceiverIdAndRequesterId(tripId, receiverId, requesterId);
+        return joinRequest != null;
     }
 }

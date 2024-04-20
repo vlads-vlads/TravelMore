@@ -26,7 +26,7 @@ public class User {
     private Long id;
 
     @Transient
-    private String defaultProfilePicturePath = "classpath:/static/images/man.png";;
+    private String url = "/images/man.png";;
 
     private String userName;
 
@@ -54,6 +54,9 @@ public class User {
 
     }
 
+    public String getUrl() {
+        return url;
+    }
 
     public Long getId() {
         return id;
