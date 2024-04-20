@@ -15,14 +15,14 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
+            background: url('https://images.pexels.com/photos/221471/pexels-photo-221471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
             background-size: cover;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-
         }
+
         body::before {
             content: '';
             position: fixed;
@@ -37,20 +37,24 @@
             height: 100%;
             filter: blur(4px);
             transition: opacity 0.5s linear;
-}
+        }
+
         .navbar {
             background-color: #f8f9fa;
             padding-top: 0;
             padding-bottom: 0;
             position: relative;
         }
+
         .navbar-brand {
             display: flex;
             align-items: center;
         }
+
         .navbar-brand svg {
             margin-right: 5px;
         }
+
         .container {
             flex-grow: 1;
             display: flex;
@@ -61,21 +65,45 @@
             margin-top: auto;
             margin-bottom: auto;
         }
+
         .card {
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
             transition: 0.3s;
             border: none;
             margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            height: 900px;
+            width: 600px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 26px;
         }
+
+        .carousel-item {
+            height: 450px;
+            width: 600px;
+        }
+
+       .carousel-item img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+       }
+
         .card:hover {
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
         }
+
         .card-body {
             padding: 14px;
         }
+
         .card .fa {
             color: #aaa;
         }
+
         .footer {
             margin-top: auto;
             background-color: #f8f9fa;
@@ -83,6 +111,7 @@
             text-align: center;
             width: 100%;
         }
+
         .footer .fa {
             padding: 10px;
             font-size: 20px;
@@ -92,72 +121,95 @@
             margin: 5px 2px;
             border-radius: 50%;
         }
+
         .footer .fa:hover {
             opacity: 0.7;
         }
+
         .fa-facebook {
             background: #3B5998;
             color: white;
         }
+
         .fa-twitter {
             background: #55ACEE;
             color: white;
         }
 
-        .btn-post-trip {
-            position: absolute;
-            top: 100px;
-            left: 50px;
-            z-index: 999;
-        }
          .username {
             font-weight: bold;
             font-size: 1.1em;
         }
 
 
-.comment-container {
-    margin-top: 20px;
-}
+        .comment-container {
+            margin-top: 20px;
+        }
 
-.comment {
-    background-color: #d1f3cd; /* Light green */
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .comment {
+            background-color: #d1f3cd; /* Light green */
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.comment-date {
-    color: #666;
-    font-size: 0.8em;
-    margin-bottom: 5px;
-}
+        .comment-date {
+            color: #666;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
 
-.comment-content {
-    font-size: 1em;
-    color: #333;
-}
+        .comment-content {
+            font-size: 1em;
+            color: #333;
+        }
 
-    .profile-pics-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
+        .profile-pics-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
-.profile-pic {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 10px;
-}
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 10px;
+        }
 
-.profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-request {
+            background-color: #FFA07A;
+            color: white;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 2;
+        }
+
+        .btn-request:hover {
+            background-color: #FF7F50;
+            color: #FFFFE0;
+        }
+
+        .avatar-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
 
     </style>
 </head>
@@ -209,15 +261,59 @@
                     </div>
                 </li>
             </ul>
+            <img src="/images/FjU2lkcWYAgNG6d.jpg" alt="Profile Picture" class="rounded-circle avatar-img">
         </div>
     </div>
 </nav>
 
-<div class="main-container">
+.<div class="button-container" style="display: flex; justify-content: center; align-items: center; gap: 20px;">
     <button class="btn btn-primary btn-post-trip" data-toggle="modal" data-target="#shareTripModal">
         Add a Trip
     </button>
+    <button class="btn btn-primary btn-write-post" data-toggle="modal" data-target="#writePostModal">
+        Write a Post
+    </button>
 </div>
+
+
+<div class="modal fade" id="writePostModal" tabindex="-1" role="dialog" aria-labelledby="writePostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="writePostModalLabel">Write Your Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="writePostForm" th:action="@{/trips/add}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="editTripId2" name="tripId">
+                    <input type="hidden" name="creator" th:value="${user.getId()}">
+                    <div class="form-group">
+                        <label for="tripName">Country</label>
+                        <select class="form-control" id="tripName2" name="destination">
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tripDescription">Description</label>
+                        <textarea class="form-control" id="tripDescription2" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="tripImage">Trip Image</label>
+                        <input type="file" class="form-control-file" id="tripImage2" name="files[]" multiple>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info" form="writePostForm">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 <div class="modal fade" id="shareTripModal" tabindex="-1" role="dialog" aria-labelledby="shareTripModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -265,9 +361,6 @@
     </div>
 </div>
 
-
-
-
     <div class="container">
         <div class="row">
             <div class="card">
@@ -282,6 +375,7 @@
                         <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
                     </p>
                     <p class="card-text" th:text="${trip.description}">Description</p>
+
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -325,7 +419,7 @@
                         <input type="hidden" name="tripId" th:value="${trip.id}">
                         <input type="hidden" name="receiver" th:value="${trip.getCreator().getId()}">
                         <input type="hidden" name="requester" th:value="${loggedInUser.id}">
-                        <button type="submit" class="btn btn-secondary">Send Request</button>
+                        <button type="submit" class="btn btn-request">Send Request</button>
                     </form>
                 </div>
 

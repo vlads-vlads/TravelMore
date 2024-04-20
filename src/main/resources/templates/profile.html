@@ -15,14 +15,14 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
+            background: url('https://images.pexels.com/photos/221471/pexels-photo-221471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center fixed;
             background-size: cover;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-
         }
+
         body::before {
             content: '';
             position: fixed;
@@ -68,18 +68,43 @@
         }
 
         .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            transition: 0.3s;
-            border: none;
+            position: relative;
+            width: auto;
+            height: 180px;
             margin: 12px auto;
-            width: 460px;
-            position:relative;
+            overflow: hidden;
+            box-shadow:
+                0 5px 10px rgba(0, 0, 0, 0.3), /* Smaller, lighter shadow */
+                0 8px 16px rgba(128, 128, 128, 0.3); /* Larger, colored shadow for depth */
+            transition: box-shadow 0.3s ease-in-out;
+            border-radius: 32px;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+        }
+
+        .card2 {
+            position: relative;
+            width: 440px;
+            height: 180px;
+            margin: 12px auto;
+            overflow: hidden;
+            box-shadow:
+                0 5px 10px rgba(0, 0, 0, 0.3), /* Smaller, lighter shadow */
+                0 8px 16px rgba(128, 128, 128, 0.3); /* Larger, colored shadow for depth */
+            transition: box-shadow 0.3s ease-in-out;
+            border-radius: 32px;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .row {
-            display: flex;
-            justify-content: center;
-             flex-wrap: wrap;
+            justify-content: space-around;
+            flex-wrap: wrap;
         }
 
         .col-md-12 {
@@ -89,8 +114,7 @@
 
         @media (max-width: 768px) {
         .card {
-        width: 100%;
-        margin: 10px;
+        width: calc(25% - 24px);
             }
         }
 
@@ -107,9 +131,19 @@
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
         }
 
+        .card2:hover {
+            box-shadow:
+                0 10px 20px rgba(0, 0, 0, 0.25),
+                0 15px 30px rgba(128, 128, 128, 0.25);
+        }
+
         .card-body {
             padding: 14px;
         }
+
+        .card-body2 {
+            padding: 18px;
+       }
 
         .card .fa {
             color: #aaa;
@@ -147,29 +181,10 @@
             color: white;
         }
 
-        .btn-post-trip {
-            position: absolute;
-            top: 100px;
-            left: 50px;
-            z-index: 999;
-        }
-
-        .btn-danger {
-            position: absolute;
-            top: 22px;
-            right: 22px;
-            margin-left: 0;
-        }
-
-        .duration {
+        .text-card .duration {
             font-weight: bold;
             color: #FF5722;
             font-size: 1.2em;
-        }
-
-        .username {
-            font-weight: bold;
-            font-size: 1.1em;
         }
 
         .profile-header {
@@ -184,21 +199,75 @@
         .profile-header {
             display: flex;
             justify-content: center;
-            background-color: #f8f9fa;
             padding: 10px 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
             margin: 0 auto;
             width: fit-content;
+            font-weight: bold;
         }
 
-        .content-background {
-            background-color: rgba(255, 255, 255, 0.4);
-            padding: 20px;
+        .avatar-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-toggle {
+            display: inline-block;
             margin: 20px auto;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-toggle:hover {
+            background-color: #0056b3;
+        }
+
+        .card-body {
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .card-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .text-card {
+            position: absolute;
+            bottom: 15px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.6);
+            padding: 7px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            width: 150px;
+            font-size: 0.8em;
+        }
+
+        .username, .card-text {
+            color: #333;
+            margin: 2px 0;
+            font-weight: bold;
+
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
         }
 
     </style>
@@ -251,6 +320,7 @@
                     </div>
                 </li>
             </ul>
+            <img src="/images/FjU2lkcWYAgNG6d.jpg" alt="Profile Picture" class="rounded-circle avatar-img">
         </div>
     </div>
 </nav>
@@ -290,29 +360,28 @@
     </div>
 </div>
 
-
 <div class="button-container" style="text-align: center; margin-top: 20px;">
-    <button class="btn btn-info" id="toggleButton3" onclick="toggleViews();">Toggle Trips/Posts</button>
+    <button class="btn btn-info" id="toggleButton4" onclick="toggleViews();">Toggle Trips/Posts</button>
 </div>
-
-<div class="content-background">
-    <h1 th:text="'Profile of ' + ${user.userName}" class="profile-header">Profile Name</h1>
-
-    <div class="content-background" id="tripCardsContainer3">
-        <div class="container">
+    <div class="content-background" id="tripCardsContainer4">
+        <h1 th:text="'Profile of ' + ${user.userName}" class="profile-header">Profile Name</h1>
+        <div class="container-fluid">
             <div class="row">
-                <div th:each="trip : ${completeTrips}" class="col-md-12">
+                <div th:each="trip : ${completeTrips}" class="col-md-3">
                     <div class="card">
                         <div class="card-body">
                             <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
-                                <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
-                                <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
-                                <p class="card-text">
-                                    <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
-                                    <span>/</span>
-                                    <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
-                                </p>
-                                <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
+                                <img class="card-image" th:src="@{'/url/to/trip/image/' + ${trip.id}}" alt="Trip Image">
+                                <div class="text-card">
+                                        <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
+                                        <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+                                        <p class="card-text">
+                                            <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
+                                            <span>/</span>
+                                            <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
+                                        </p>
+                                        <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -321,12 +390,12 @@
         </div>
     </div>
 
-    <div class="content-background" id="postCardsContainer3" style="display: none;">
+<div class="content-background" id="postCardsContainer4" style="display: none;">
         <div class="container">
             <div class="row">
-                <div th:each="trip : ${incompleteTrips}" class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
+                <div th:each="trip : ${incompleteTrips}" class="col-md-3">
+                    <div class="card2">
+                        <div class="card-body2">
                             <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${loggedInUser.id}}" class="card-link">
                                 <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                                 <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
