@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetchCountries();
-    window.addEventListener('load', function() {
-        const tripCards = document.querySelectorAll('.card');
-        tripCards.forEach(function(card) {
-            const tripId = card.querySelector('img').id.split('-')[1];
-            const destination = card.querySelector('.card-text').textContent.trim();
-//            fetchRandomImage(destination, tripId, card);
-        });
+    const shareTripForm = document.getElementById('shareTripForm');
+    shareTripForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        fetchRandomImageAndSubmitForm();
     });
 });
 
@@ -28,15 +26,17 @@ function fetchCountries() {
         .catch(error => console.error('Error fetching countries:', error));
 }
 
-function fetchRandomImage(destination, tripId, card) {
-    const imageUrl = `https://api.unsplash.com/photos/random?query=${destination}&orientation=landscape&client_id=u2wkrKKJxinMI8ocyh-Xm7euYttlDtgp3Fdg7XPFtd4`;
+function fetchRandomImageAndSubmitForm() {
+    const tripName = document.getElementById('tripName').value;
+    const imageUrl = `https://api.unsplash.com/photos/random?query=${tripName}&orientation=landscape&client_id=u2wkrKKJxinMI8ocyh-Xm7euYttlDtgp3Fdg7XPFtd4`;
 
     fetch(imageUrl)
         .then(response => response.json())
         .then(data => {
             const imageSrc = data.urls.regular;
-            const tripImage = card.querySelector('img');
-            tripImage.src = imageSrc;
+            document.getElementById('randomImageUrl').value = imageSrc;
+
+            document.getElementById('shareTripForm').submit();
         })
         .catch(error => console.error('Error fetching random image:', error));
 }
@@ -94,5 +94,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 });
 
+
+function search() {
+    var input, filter, cards, card, i, txtValue;
+    input = document.getElementById('searchInput');
+    filter = input.value.toUpperCase();
+    cards = document.getElementsByClassName('card');
+
+    for (i = 0; i < cards.length; i++) {
+        card = cards[i];
+        txtValue = card.textContent || card.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            card.style.display = "";
+        } else {
+            card.style.display = "none";
+        }
+    }
+}
 
 

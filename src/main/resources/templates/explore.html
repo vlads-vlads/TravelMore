@@ -213,6 +213,11 @@
             </ul>
         </div>
     </div>
+    <!-- Inside your navbar -->
+    <form class="form-inline my-2 my-lg-0 mr-auto">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="search()">Search</button>
+    </form>
 </nav>
 
 <div class="button-container" style="text-align: center; margin-top: 20px;">
@@ -273,34 +278,37 @@
 </div>
 
 <div class="content-background" id="tripCardsContainer2">
-<div class="container">
-    <div class="row">
-        <div th:each="trip : ${completeTrips}" class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
-                    <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
-                        <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
-                        <p class="card-text">
-                            <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
-                            <span>/</span>
-                            <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
-                        </p>
-                        <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
-                    </a>
+    <div class="container">
+        <div class="row">
+            <div th:each="trip : ${completeTrips}" class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <img th:src="${trip.imageUrl}" id="complTripImageDisplay-${trip.id}" alt="Trip Image">
+                        <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
+                            <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
+                            <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+                            <p class="card-text">
+                                <span th:text="${#dates.format(trip.getStartDate, 'yyyy.MM.dd')}">Trip Start Date</span>
+                                <span>/</span>
+                                <span th:text="${#dates.format(trip.getEndDate, 'yyyy.MM.dd')}">Trip End Date</span>
+                            </p>
+                            <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Trip Duration</p>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
 
 <div class="content-background" id="postCardsContainer2" style="display: none;">
     <div class="container">
         <div class="row">
             <div th:each="trip : ${incompleteTrips}" class="col-md-12">
-                <div class="card">
+                <div class="card" >
                     <div class="card-body">
+                        <img th:src="${trip.imageUrl}" id="incTripImageDisplay-${trip.id}" alt="Trip Image">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${loggedInUser.id}}" class="card-link">
                             <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                             <p class="card-text" th:text="${trip.getDestination()}">Destination</p>

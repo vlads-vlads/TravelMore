@@ -56,6 +56,7 @@ public class TripController {
                           @RequestParam(value = "endDate", required = false) String endDateString,
                           @RequestParam(value = "files[]", required = false) MultipartFile[] files,
                           @RequestParam("description") String description,
+                          @RequestParam("randomImageUrl") String randomImageUrl,
                           Model model) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -71,6 +72,7 @@ public class TripController {
                 trip.setEndDate(endDate);
             }
 
+            trip.setImageUrl(randomImageUrl);
             trip.setDescription(description);
 
             com.example.TravelMore.trip.Trip savedTrip = tripService.addTrip(trip);

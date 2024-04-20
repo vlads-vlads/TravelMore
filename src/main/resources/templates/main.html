@@ -339,6 +339,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="hidden" id="randomImageUrl" name="randomImageUrl">
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
@@ -356,7 +357,7 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                     <div class="card-body">
-                        <img id="tripImageDisplay-${trip.id}" src="">
+                        <img th:src="${trip.imageUrl}" id="complTripImageDisplay-${trip.id}" alt="Trip Image">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
                             <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                             <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
@@ -384,9 +385,11 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                     <div class="card-body">
+                        <img th:src="${trip.imageUrl}" id="incTripImageDisplay-${trip.id}" alt="Trip Image">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
                             <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                             <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+
                         </a>
                     </div>
                 </div>
