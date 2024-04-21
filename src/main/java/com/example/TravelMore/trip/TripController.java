@@ -51,6 +51,7 @@ public class TripController {
                           @RequestParam(value = "endDate", required = false) String endDateString,
                           @RequestParam(value = "files[]", required = false) MultipartFile[] files,
                           @RequestParam("description") String description,
+                          @RequestParam("randomImageUrl") String randomImageUrl,
                           Model model) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -70,6 +71,9 @@ public class TripController {
                 model.addAttribute("error", "End date must be the same or later than start date!");
                 return "errorPage";
             }
+
+
+            trip.setImageUrl(randomImageUrl);
 
             trip.setDescription(description);
 

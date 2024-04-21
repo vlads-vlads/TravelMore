@@ -23,6 +23,8 @@ public class Trip {
 
     private String description;
 
+    private String imageUrl;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User creator;
@@ -157,6 +159,14 @@ public class Trip {
 
     public void setJoinRequests(List<JoinRequest> joinRequests) {
         this.joinRequests = joinRequests;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
 
