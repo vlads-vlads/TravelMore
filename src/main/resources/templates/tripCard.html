@@ -437,7 +437,8 @@
                     <div th:each="participant : ${participants}" class="col-6 col-md-4 col-lg-2 d-flex justify-content-center mb-3">
                         <div class="profile-pic text-center">
                             <a th:href="@{'/profile/' + ${participant.getId()}}">
-                                <img th:src="${participant.getUrl()}" alt="Profile Pic" class="img-fluid">
+                                <img th:if="${participant.getUrl() != null}" th:src="${participant.getUrl()}" alt="Profile Pic" class="img-fluid">
+                                <img th:unless="${participant.getUrl() != null}" src="/images/FjU2lkcWYAgNG6d.jpg" alt="Default Profile Pic" class="img-fluid">
                             </a>
                             <div>
                                 <span th:text="${participant.getUserName()}"></span>
