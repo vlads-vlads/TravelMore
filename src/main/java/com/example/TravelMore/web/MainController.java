@@ -190,15 +190,23 @@ public class MainController {
                         .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
                         .collect(Collectors.toList());
 
-                if (profileUser == null) {
-                    throw new IllegalStateException("User not found");
-                }
+                List<String> avatars = Arrays.asList(
+                        "/images/cat.png",
+                        "/images/beardman.png",
+                        "/images/longhair.png",
+                        "/images/man.png",
+                        "/images/mustache.png",
+                        "/images/panda.png",
+                        "/images/woman.png"
+                );
+
                 completeTrips.sort(Comparator.comparing(Trip::getStartDate));
                 model.addAttribute("loggedInUser", loggedInUser);
                 model.addAttribute("user", profileUser);
                 model.addAttribute("trips", tripService.getTripsCreatedByUser(profileUser.getId()));
                 model.addAttribute("completeTrips", completeTrips);
                 model.addAttribute("incompleteTrips", incompleteTrips);
+                model.addAttribute("avatars", avatars);
 
                 return "profile";
             }
