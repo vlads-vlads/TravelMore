@@ -149,7 +149,13 @@ public class UserControllerWeb {
     @PostMapping("/saveAvatar")
     public String saveAvatar(@RequestParam("userId") Long userId, @RequestParam("avatarFileName") String avatarFileName) {
         try {
-            String trimmedFileName = avatarFileName.trim();
+            int commaIndex = avatarFileName.indexOf(",");
+            String trimmedFileName;
+            if (commaIndex != -1) {
+                trimmedFileName = avatarFileName.substring(0, commaIndex).trim();
+            } else {
+                trimmedFileName = avatarFileName.trim();
+            }
             userService.updateUserAvatar(userId, trimmedFileName);
             return "redirect:/profile/" + userId;
         } catch (IllegalArgumentException | IllegalStateException e) {
