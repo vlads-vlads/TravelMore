@@ -150,5 +150,15 @@ public class UserControllerWeb {
         return "createdTrips"; // Return the view name
     }
 
+    @PostMapping("/saveAvatar")
+    public String saveAvatar(@RequestParam("userId") Long userId, @RequestParam("avatarFileName") String avatarFileName) {
+        try {
+            String trimmedFileName = avatarFileName.trim();
+            userService.updateUserAvatar(userId, trimmedFileName);
+            return "redirect:/profile/" + userId;
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return "errorPage";
+        }
+    }
 
 }

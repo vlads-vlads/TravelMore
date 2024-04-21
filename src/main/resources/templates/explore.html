@@ -265,29 +265,17 @@
 </head>
 <body>
 
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light static-top mb-5 shadow">
-    <div class="container">
+    <div class="container d-flex justify-content-between align-items-center">
         <a class="navbar-brand" th:href="@{/}">
-            <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="d-inline-block align-top">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-inline-block align-top">
                 <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-5v2.84l-2.34 1.56a1.5 1.5 0 0 0 .68 2.6l2.66.89v3.11l-1.34.67a1.5 1.5 0 0 0 .68 2.6l2.66.89 2.66-.89a1.5 1.5 0 0 0 .68-2.6L13 18.89v-3.11l2.66-.89a1.5 1.5 0 0 0 .68-2.6L14 12.84V10l8 5z"></path>
             </svg>
             Travel More
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarResponsive">
+            <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/main}">Dashboard
                         <span class="sr-only">(current)</span>
@@ -311,10 +299,20 @@
                     </div>
                 </li>
             </ul>
-            <img src="/images/FjU2lkcWYAgNG6d.jpg" alt="Profile Picture" class="rounded-circle avatar-img">
+        </div>
+        <div class="d-flex align-items-center">
+            <img src="/images/FjU2lkcWYAgNG6d.jpg" alt="Profile Picture" class="rounded-circle avatar-img mr-3">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="search()">Search</button>
+            </form>
         </div>
     </div>
 </nav>
+
+
+
+
 
 <div class="button-container" style="text-align: center; margin-top: 20px;">
     <button class="btn btn-info" id="toggleButton2" onclick="toggleViews();">Toggle Trips/Posts</button>
@@ -367,49 +365,34 @@
 </div>
 </div>
 
-<div class="modal fade" id="shareTripModal" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="avatarModal" tabindex="-1" role="dialog" aria-labelledby="avatarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="shareTripModalLabel">Add Your Trip</h5>
+                <h5 class="modal-title" id="avatarModalLabel">Select Profile Picture</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="shareTripForm" th:action="@{/trips/add}" method="post" enctype="multipart/form-data">
-                    <input type="hidden" id="editTripId" name="tripId">
-                    <input type="hidden" name="creator" th:value="${user.getId()}">
-                    <div class="form-group">
-                        <label for="tripName">Destination</label>
-                        <select class="form-control" id="tripName" name="destination">
-                            <option value="Spain">Spain</option>
-                            <option value="Germany">Germany</option>
-                            <option value="Italy">Italy</option>
-                            <option value="Greece">Greece</option>
-                        </select>
+                <!-- List of predefined avatars -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <form action="/saveAvatar" method="post">
+                            <button type="submit" class="btn btn-avatar" name="avatarFileName" value="avatar1.jpg">
+                                <img src="/images/cat.png" alt="Avatar 1" class="img-thumbnail">
+                            </button>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="tripDate">Start Date</label>
-                        <input type="date" class="form-control" id="tripDate" name="startDate">
+                    <div class="col-md-4 mb-3">
+                        <form action="/saveAvatar" method="post">
+                            <button type="submit" class="btn btn-avatar" name="avatarFileName" value="avatar2.jpg">
+                                <img src="/images/beardman.png" alt="Avatar 2" class="img-thumbnail">
+                            </button>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="tripEndDate">End Date</label>
-                        <input type="date" class="form-control" id="tripEndDate" name="endDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="tripDescription">Description</label>
-                        <textarea class="form-control" id="tripDescription" name="description" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="tripImage">Trip Image</label>
-                        <input type="file" class="form-control-file" id="tripImage" name="files[]" multiple>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
-                </form>
+                    <!-- Add more avatar buttons here -->
+                </div>
             </div>
         </div>
     </div>
@@ -421,7 +404,7 @@
             <div th:each="trip : ${completeTrips}" class="col-md-12">
                 <div class="card">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
-                            <img class="card-image" th:src="@{'/url/to/trip/image/' + ${trip.id}}" alt="Trip Image">
+                            <img class="card-image" th:src="${trip.imageUrl}" id="complTripImageDisplay-${trip.id}" alt="Trip Image">
                             <div class="text-card">
                                     <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                                     <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
@@ -447,6 +430,7 @@
             <div th:each="trip : ${incompleteTrips}" class="col-md-12">
                 <div class="card2">
                     <div class="card-body2">
+                        <img class="card-image" th:src="${trip.imageUrl}" id="incomplTripImageDisplay-${trip.id}" alt="Trip Image">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${loggedInUser.id}}" class="card-link">
                             <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                             <p class="card-text" th:text="${trip.getDestination()}">Destination</p>

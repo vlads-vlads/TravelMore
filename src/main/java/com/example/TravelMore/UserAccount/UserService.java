@@ -83,4 +83,16 @@ public class UserService {
         String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
         return password.matches(passwordRegex);
     }
+
+    public void updateUserAvatar(Long userId, String avatarFileName) {
+        User user = userRepository.findById(userId).orElse(null);
+        System.out.println(avatarFileName + "sff");
+
+        if (user != null) {
+            user.setUrl(avatarFileName);
+            System.out.println(user.getUrl());
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
 }

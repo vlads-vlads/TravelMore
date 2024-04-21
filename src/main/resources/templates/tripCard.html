@@ -66,19 +66,41 @@
             margin-bottom: auto;
         }
 
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            transition: 0.3s;
-            border: none;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-            height: 900px;
-            width: 600px;
-            display: flex;
-            flex-direction: column;
-            border-radius: 26px;
-        }
+ .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border: none;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    width: 600px; /* Set the initial width */
+    border-radius: 26px;
+}
+
+.card-body {
+    padding: 14px;
+    overflow: hidden; /* Hide overflow content */
+}
+
+.card .carousel-item {
+    height: 300px; /* Set initial height for carousel */
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 90%; /* Adjust width for smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .card {
+        width: 100%; /* Adjust width for even smaller screens */
+    }
+}
 
         .carousel-item {
             height: 450px;
@@ -210,6 +232,13 @@
             margin-right: auto;
         }
 
+        .profile-pics-container {
+    justify-content: center; /* Center the row horizontally */
+}
+
+.profile-pic {
+    margin-bottom: 10px; /* Reduce the space between images */
+}
 
     </style>
 </head>
@@ -385,7 +414,7 @@
                         </ol>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img class="d-block w-100" src="https://via.placeholder.com/600x400" alt="Placeholder Image">
+                                <img class="d-block w-100" src="https://flagsapi.com/BE/flat/64.png" alt="Placeholder Image">
                             </div>
                             <th:block th:each="image : ${images}">
                                 <div class="carousel-item">
@@ -404,15 +433,18 @@
                     </div>
                 </div>
 
-                <div class="profile-pics-container">
-                    <div th:each="participant : ${participants}" class="col-6 col-md-4 col-lg-3">
-                        <div class="profile-pic">
-                            <img th:src="${participant.getUrl()}" alt="Profile Pic">
-                            <span th:text="${participant.getUserName()}"></span>
+                <div class="profile-pics-container row justify-content-center">
+                    <div th:each="participant : ${participants}" class="col-6 col-md-4 col-lg-2 d-flex justify-content-center mb-3">
+                        <div class="profile-pic text-center">
+                            <a th:href="@{'/profile/' + ${participant.getId()}}">
+                                <img th:src="${participant.getUrl()}" alt="Profile Pic" class="img-fluid">
+                            </a>
+                            <div>
+                                <span th:text="${participant.getUserName()}"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
 
                 <div class="button-container">
                     <form id="requestForm" th:action="@{/join-requests/send-to-user}" method="post">
