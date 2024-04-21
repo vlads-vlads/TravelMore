@@ -1,13 +1,11 @@
 package com.example.TravelMore.Comment;
 
-import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripService;
-import jakarta.validation.Valid;
+import com.example.TravelMore.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.example.TravelMore.util.JwtTokenUtil;
 
 @Controller
 @RequestMapping("/comments")
@@ -68,20 +66,24 @@ public class CommentViewController {
     }
 
     @PostMapping("/comment/add")
-    public String addComment(@RequestParam("tripId") Long tripId, @RequestParam("description") String description, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
-        if (!authToken.isEmpty()) {
-            Long userId = jwtTokenUtil.extractUserId(authToken);
-            if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
+    public String addComment(@RequestParam("tripId") Long tripId, @RequestParam("description") String description, @CookieValue(value = "authToken", defaultValue = "") String authToken, Model model) {
+        try {
+            if (!authToken.isEmpty()) {
+                Long userId = jwtTokenUtil.extractUserId(authToken);
+                if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
 
-                if (!description.isBlank()) {
-                    Comment comment = new Comment();
-                    comment.setContent(description);
-                    commentService.saveComment(comment, tripId);
+                    if (!description.isBlank()) {
+                        Comment comment = new Comment();
+                        comment.setContent(description);
+                        commentService.saveComment(comment, tripId);
+                    }
                 }
                 return "redirect:/tripcard?tripId=" + tripId + "&userId=" + userId;
             }
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to add trip" + e.getMessage());
+            return "errorPage";
         }
-
         return "redirect:/index";
     }
 }

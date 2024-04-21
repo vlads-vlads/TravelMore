@@ -5,13 +5,10 @@ import com.example.TravelMore.Image.ImageService;
 import com.example.TravelMore.UserAccount.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -25,14 +22,12 @@ import java.util.Set;
 public class TripController {
 
     private final TripService tripService;
-//    private final TripParticipantService tripParticipantService;
     private final CommentService commentService;
     private final ImageService imageService;
 
     @Autowired
     public TripController(TripService tripService, CommentService commentService, ImageService imageService) {
         this.tripService = tripService;
-//        this.tripParticipantService = tripParticipantService;
         this.commentService = commentService;
         this.imageService = imageService;
     }
@@ -51,7 +46,7 @@ public class TripController {
     }
 
     @PostMapping("/add")
-    public String addTrip(@Valid @ModelAttribute("trip") com.example.TravelMore.trip.Trip trip,
+    public String addTrip(@Valid @ModelAttribute("trip") Trip trip,
                           @RequestParam(value = "startDate", required = false) String startDateString,
                           @RequestParam(value = "endDate", required = false) String endDateString,
                           @RequestParam(value = "files[]", required = false) MultipartFile[] files,
@@ -72,10 +67,17 @@ public class TripController {
                 trip.setEndDate(endDate);
             }
 
+            if (endDate != null && endDate.before(startDate)) {
+                model.addAttribute("error", "End date must be the same or later than start date!");
+                return "errorPage";
+            }
+
+
             trip.setImageUrl(randomImageUrl);
+
             trip.setDescription(description);
 
-            com.example.TravelMore.trip.Trip savedTrip = tripService.addTrip(trip);
+            Trip savedTrip = tripService.addTrip(trip);
 
             if (files != null && files.length > 0) {
                 imageService.uploadPhotos(files, savedTrip.getId());
@@ -83,106 +85,56 @@ public class TripController {
 
             return "redirect:/main";
         } catch (ParseException | IOException e) {
-            model.addAttribute("error", "Failed to add trip");
-            return "error";
-        }
-    }
-
-//    @PostMapping("/add")
-//    public String addTrip(@Valid @ModelAttribute("trip") Trip trip,
-//                          @RequestParam("startDate") String startDateString,
-//                          @RequestParam("endDate") String endDateString,
-//                          @RequestParam("files[]") MultipartFile[] files,
-//                          @RequestParam("description") String description,
-//                          Model model) {
-//        try {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//            Date startDate = dateFormat.parse(startDateString);
-//            Date endDate = dateFormat.parse(endDateString);
-//
-//            trip.setStartDate(startDate);
-//            trip.setEndDate(endDate);
-//            trip.setDescription(description);
-//
-//            tripService.addTrip(trip);
-//            imageService.uploadPhotos(files, trip.getId());
-//
-//            return "redirect:/main";
-//        } catch (ParseException | IOException e) {
-//            model.addAttribute("error", "Failed to add trip");
-//            return "error";
-//        }
-//    }
-
-    @GetMapping("/{id}/update")
-    public String showUpdateTripForm(@PathVariable("id") Long tripId, Model model) {
-        Trip trip = tripService.getTripById(tripId);
-        if (trip != null) {
-            model.addAttribute("trip", trip);
-            return "updateTripForm";
-        } else {
+            model.addAttribute("error", "Failed to add trip" + e.getMessage());
             return "errorPage";
         }
     }
 
-//    @PostMapping("/{id}/update")
-//    public String updateTrip(@ModelAttribute("trip") Trip trip) {
-//        try {
-//            tripService.updateTrip(trip.g);
-//            return "redirect:/trips/all";
-//        } catch (IllegalArgumentException e) {
-//            return "errorPage";
-//        }
-//    }
-//    @GetMapping("/{tripId}/remove")
-//    public String getRemoveTripForm(@PathVariable Long tripId, Model model) {
-//        Trip trip = tripService.removeTripById(tripId);
-//        model.addAttribute("trip", trip);
-//        return "removeTrip";
-//    }
-//
-//    @GetMapping("/{tripId}/remove")
-//    public String removeTrip(@PathVariable Long tripId, HttpServletResponse response) {
-//        tripService.removeTripById(tripId);
-//        return "redirect: /main";
-//    }
+    @GetMapping("/{id}/update")
+    public String showUpdateTripForm(@PathVariable("id") Long tripId, Model model) {
+        try{
+        Trip trip = tripService.getTripById(tripId);
+            model.addAttribute("trip", trip);
+            return "updateTripForm";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to update trip" + e.getMessage());
+            return "errorPage";
+        }
+    }
 
-//    @PostMapping("/{id}/remove")
-//    public String deleteTrip(@PathVariable("id") Long tripId) {
-//        try {
-//            tripService.removeTripById(tripId);
-//            return "redirect:/trips/all";
-//        } catch (IllegalArgumentException e) {
-//            return "errorPage";
-//        }
     @PostMapping("/{tripId}/remove")
-    public String removeTrip(@PathVariable Long tripId, RedirectAttributes redirectAttributes) {
+    public String removeTrip(@PathVariable Long tripId, Model model) {
         try {
             tripService.removeTripById(tripId);
-            redirectAttributes.addFlashAttribute("success", "Trip successfully deleted!");
+            return "redirect:/main";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error deleting trip: " + e.getMessage());
-            e.printStackTrace();
+            model.addAttribute("error", "Failed to remove trip" + e.getMessage());
+            return "errorPage";
         }
-        return "redirect:/main";
     }
 
     @GetMapping("/{id}")
     public String showTripDetails(@PathVariable("id") Long tripId, Model model) {
-        Trip trip = tripService.getTripById(tripId);
-        if (trip != null) {
+        try {
+            Trip trip = tripService.getTripById(tripId);
             model.addAttribute("trip", trip);
             return "tripDetails";
-        } else {
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to show trip details" + e.getMessage());
             return "errorPage";
         }
     }
 
     @GetMapping("/{tripId}/participants")
     public String getTripParticipants(@PathVariable Long tripId, Model model) {
-        Set<User> participants = tripService.getTripParticipants(tripId);
-        model.addAttribute("participants", participants);
-        return "tripParticipants"; // Return the view name
+        try {
+            Set<User> participants = tripService.getTripParticipants(tripId);
+            model.addAttribute("participants", participants);
+            return "tripParticipants";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to show trip participants" + e.getMessage());
+            return "errorPage";
+        }
     }
 
 

@@ -1,78 +1,62 @@
 package com.example.TravelMore.trip;
 
-import com.example.TravelMore.Comment.Comment;
-import com.example.TravelMore.Comment.CommentService;
-import com.example.TravelMore.UserAccount.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/trips")
 public class TripRestController {
 
     private final TripService tripService;
-    private final CommentService commentService;
 
     @Autowired
-    public TripRestController(TripService tripService, CommentService commentService) {
+    public TripRestController(TripService tripService) {
         this.tripService = tripService;
-        this.commentService = commentService;
     }
-
-//    @PostMapping("/add")
-//    public ResponseEntity<Trip> addTrip(@Valid @RequestBody Trip trip) {
-//        Trip addedTrip = tripService.addTrip(trip);
-//        return new ResponseEntity<>(addedTrip, HttpStatus.CREATED);
-//    }
-//
-//    @DeleteMapping("/{tripId}")
-//    public ResponseEntity<Trip> removeTripById(@PathVariable Long tripId) {
-//        Trip removedTrip = tripService.removeTripById(tripId);
-//        return new ResponseEntity<>(removedTrip, HttpStatus.OK);
-//    }
-
-//    @PutMapping("/{tripId}")
-//    public ResponseEntity<Trip> updateTrip(@PathVariable Long tripId, @Valid @RequestBody Trip updatedTrip) {
-//        Trip updated = tripService.updateTrip(tripId, updatedTrip);
-//        return new ResponseEntity<>(updated, HttpStatus.OK);
-//    }
-
-//    @PostMapping("/{tripId}/participants")
-//    public ResponseEntity<Trip> addParticipantToTrip(@PathVariable Long tripId, @Valid @RequestBody User participant) {
-//        Trip updatedTrip = tripService.addParticipantToTrip(tripId, participant);
-//        return new ResponseEntity<>(updatedTrip, HttpStatus.OK);
-//    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Trip>> getAllTrips() {
         List<Trip> trips = tripService.getAllTrips();
-        return new ResponseEntity<>(trips, HttpStatus.OK);
+        return ResponseEntity.ok(trips);
     }
 
     @GetMapping("/{tripId}")
-    public ResponseEntity<Map<String, Object>> showTripDetails(@PathVariable Long tripId) {
+    public ResponseEntity<Trip> getTripById(@PathVariable Long tripId) {
         Trip trip = tripService.getTripById(tripId);
-
-        if (trip == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Set<User> participants = tripService.getTripParticipants(tripId);
-        List<Comment> comments = commentService.getCommentsForTrip(tripId);
-
-        Map<String, Object> tripDetails = new HashMap<>();
-        tripDetails.put("trip", trip);
-        tripDetails.put("participants", participants);
-        tripDetails.put("comments", comments);
-
-        return new ResponseEntity<>(tripDetails, HttpStatus.OK);
+        return ResponseEntity.ok(trip);
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<Trip> addTrip(@RequestBody Trip trip) {
+        Trip addedTrip = tripService.addTrip(trip);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedTrip);
+    }
+
+    @PutMapping("/{tripId}")
+    public ResponseEntity<Trip> updateTrip(@PathVariable Long tripId, @RequestBody Trip updatedTrip) {
+        Trip trip = tripService.updateTrip(tripId, updatedTrip);
+        return ResponseEntity.ok(trip);
+    }
+
+    @DeleteMapping("/{tripId}")
+    public ResponseEntity<Void> removeTripById(@PathVariable Long tripId) {
+        tripService.removeTripById(tripId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/created-by/{userId}")
+    public ResponseEntity<List<Trip>> getTripsCreatedByUser(@PathVariable Long userId) {
+        List<Trip> trips = tripService.getTripsCreatedByUser(userId);
+        return ResponseEntity.ok(trips);
+    }
+
+    @GetMapping("/participated-by/{userId}")
+    public ResponseEntity<List<Trip>> getParticipatedTrips(@PathVariable Long userId) {
+        List<Trip> trips = tripService.getParticipatedTrips(userId);
+        return ResponseEntity.ok(trips);
+    }
 }

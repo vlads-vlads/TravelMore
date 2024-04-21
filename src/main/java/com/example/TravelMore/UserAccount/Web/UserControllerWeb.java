@@ -2,20 +2,16 @@ package com.example.TravelMore.UserAccount.Web;
 
 import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.UserAccount.UserService;
-import com.example.TravelMore.joinRequest.JoinRequest;
 import com.example.TravelMore.joinRequest.JoinRequestService;
 import com.example.TravelMore.model.LoginRequest;
 import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripService;
 import com.example.TravelMore.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -45,7 +41,7 @@ public class UserControllerWeb {
             return "index";
         } catch (IllegalArgumentException | IllegalStateException e) {
             model.addAttribute("error", e.getMessage());
-            return "registrationFailure";
+            return "errorPage";
         }
     }
 
@@ -133,21 +129,21 @@ public class UserControllerWeb {
     public String getParticipatedTrips(@PathVariable Long userId, Model model) {
         List<Trip> participatedTrips = tripService.getParticipatedTrips(userId);
         model.addAttribute("participatedTrips", participatedTrips);
-        return "participatedTrips"; // Return the view name
+        return "participatedTrips";
     }
 
 //    @GetMapping("/{userId}/join-requests")
 //    public String getJoinRequestsForUser(@PathVariable Long userId, Model model) {
 //        List<JoinRequest> joinRequests = joinRequestService.getJoinRequestsForUser(userId);
 //        model.addAttribute("joinRequests", joinRequests);
-//        return "joinRequests"; // Return the view name
+//        return "joinRequests";
 //    }
 
     @GetMapping("/{userId}/created-trips")
     public String getCreatedTrips(@PathVariable Long userId, Model model) {
         List<Trip> createdTrips = tripService.getTripsCreatedByUser(userId);
         model.addAttribute("createdTrips", createdTrips);
-        return "createdTrips"; // Return the view name
+        return "createdTrips";
     }
 
     @PostMapping("/saveAvatar")

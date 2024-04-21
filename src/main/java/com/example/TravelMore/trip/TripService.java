@@ -29,17 +29,12 @@ public class TripService {
     }
 
     public Trip addTrip(Trip trip) {
-//        trip.setParticipants(Set.of(trip.getCreator())); //TODO check necessity
+        if (trip.getEndDate().before(trip.getStartDate())) {
+            throw new IllegalArgumentException("End date must be the same or later than start date");
+        }
         return tripRepository.save(trip);
     }
 
-//    public void removeTripById(Long tripId) {
-//        if (tripRepository.existsById(tripId)) {
-//            tripRepository.deleteById(tripId);
-//        } else {
-//            throw new IllegalArgumentException("Trip not found");
-//        }
-//    }
     public Trip removeTripById(Long tripId) {
         Trip trip = tripRepository.findById(tripId).orElseThrow(() -> new IllegalArgumentException("Trip not found"));
         CommentRepository.deleteByTrip(trip);
@@ -57,14 +52,6 @@ public class TripService {
         existingTrip.setEndDate(updatedTrip.getEndDate());
         return tripRepository.save(existingTrip);
     }
-
-//    public Trip updateTrip(Trip trip) {
-//        if (tripRepository.existsById(trip.getId())) {
-//            return tripRepository.save(trip);
-//        } else {
-//            throw new IllegalArgumentException("Trip not found");
-//        }
-//    }
 
     public List<Trip> getAllTrips() {
         return tripRepository.findAll();
