@@ -25,7 +25,6 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Transient
     private String url = "/images/man.png";;
 
     private String userName;

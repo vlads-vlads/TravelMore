@@ -90,6 +90,7 @@ public class UserService {
 
         if (user != null) {
             user.setUrl(avatarFileName);
+            userRepository.save(user);
             System.out.println(user.getUrl());
         } else {
             throw new IllegalArgumentException("User not found");

@@ -326,7 +326,8 @@
                     </div>
                 </li>
             </ul>
-            <img src="/images/FjU2lkcWYAgNG6d.jpg" alt="Profile Picture" class="rounded-circle avatar-img">
+            <img th:if="${user.url != null}" th:src="${user.url}" alt="Profile Picture" class="rounded-circle avatar-img">
+            <img th:if="${user.url == null}" src="/images/FjU2lkcWYAgNG6d.jpg" alt="Default Profile Picture" class="rounded-circle avatar-img">
         </div>
     </div>
 </nav>
