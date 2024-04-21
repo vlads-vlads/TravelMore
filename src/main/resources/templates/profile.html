@@ -350,66 +350,13 @@
             <div class="modal-body">
                 <!-- List of predefined avatars -->
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <!-- Iterate over avatars and generate buttons -->
+                    <div class="col-md-4 mb-3" th:each="avatar : ${avatars}">
                         <form action="/travelMore/saveAvatar" method="post">
                             <input type="hidden" name="userId" th:value="${loggedInUser.getId()}">
-                            <input type="hidden" name="avatarFileName" value="/images/cat.png">
+                            <input type="hidden" name="avatarFileName" th:value="${avatar}">
                             <button type="submit" class="btn btn-avatar" name="avatarFileName">
-                                <img src="/images/cat.png" alt="Avatar 1" class="img-thumbnail" th:data-avatar="avatar1.jpg">
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <form action="/travelMore/saveAvatar" method="post">
-                            <input type="hidden" name="userId" th:value="${loggedInUser.getId()}">
-                            <input type="hidden" name="avatarFileName" value="/images/beardman.png">
-                            <button type="submit" class="btn btn-avatar" name="avatarFileName">
-                                <img src="/images/beardman.png" alt="Avatar 2" class="img-thumbnail" th:data-avatar="avatar2.jpg">
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <form action="/travelMore/saveAvatar" method="post">
-                            <input type="hidden" name="userId" th:value="${loggedInUser.getId()}">
-                            <input type="hidden" name="avatarFileName" value="/images/longhair.png">
-                            <button type="submit" class="btn btn-avatar" name="avatarFileName">
-                                <img src="/images/longhair.png" alt="Avatar 1" class="img-thumbnail" th:data-avatar="avatar1.jpg">
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <form action="/travelMore/saveAvatar" method="post">
-                            <input type="hidden" name="userId" th:value="${loggedInUser.getId()}">
-                            <input type="hidden" name="avatarFileName" value="/images/man.png">
-                            <button type="submit" class="btn btn-avatar" name="avatarFileName">
-                                <img src="/images/man.png" alt="Avatar 1" class="img-thumbnail" th:data-avatar="avatar1.jpg">
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <form action="/travelMore/saveAvatar" method="post">
-                            <input type="hidden" name="userId" th:value="${loggedInUser.getId()}">
-                            <input type="hidden" name="avatarFileName" value="/images/mustache.png">
-                            <button type="submit" class="btn btn-avatar" name="avatarFileName">
-                                <img src="/images/mustache.png" alt="Avatar 1" class="img-thumbnail" th:data-avatar="avatar1.jpg">
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <form action="/travelMore/saveAvatar" method="post">
-                            <input type="hidden" name="userId" th:value="${loggedInUser.getId()}">
-                            <input type="hidden" name="avatarFileName" value="/images/panda.png">
-                            <button type="submit" class="btn btn-avatar" name="avatarFileName">
-                                <img src="/images/panda.png" alt="Avatar 1" class="img-thumbnail" th:data-avatar="avatar1.jpg">
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <form action="/travelMore/saveAvatar" method="post">
-                            <input type="hidden" name="userId" th:value="${loggedInUser.getId()}">
-                            <input type="hidden" name="avatarFileName" value="/images/woman.png">
-                            <button type="submit" class="btn btn-avatar" name="avatarFileName">
-                                <img src="/images/woman.png" alt="Avatar 1" class="img-thumbnail" th:data-avatar="avatar1.jpg">
+                                <img th:src="${avatar}" alt="Avatar" class="img-thumbnail" th:data-avatar="${avatar}">
                             </button>
                         </form>
                     </div>
