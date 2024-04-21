@@ -65,17 +65,37 @@ public class CommentViewController {
                 .orElse("redirect:/comments");
     }
 
+    //    @PostMapping("/comment/add")
+//    public String addComment(@RequestParam("tripId") Long tripId, @RequestParam("description") String description, @CookieValue(value = "authToken", defaultValue = "") String authToken, Model model) {
+//        try {
+//            if (!authToken.isEmpty()) {
+//                Long userId = jwtTokenUtil.extractUserId(authToken);
+//                if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
+//
+//                    if (!description.isBlank()) {
+//                        Comment comment = new Comment();
+//                        comment.setContent(description);
+//                        commentService.saveComment(comment, tripId);
+//                    }
+//                }
+//                return "redirect:/tripcard?tripId=" + tripId + "&userId=" + userId;
+//            }
+//        } catch (Exception e) {
+//            model.addAttribute("error", "Failed to add trip" + e.getMessage());
+//            return "errorPage";
+//        }
+//        return "redirect:/index";
+//    }
     @PostMapping("/comment/add")
     public String addComment(@RequestParam("tripId") Long tripId, @RequestParam("description") String description, @CookieValue(value = "authToken", defaultValue = "") String authToken, Model model) {
         try {
             if (!authToken.isEmpty()) {
                 Long userId = jwtTokenUtil.extractUserId(authToken);
                 if (userId != null && jwtTokenUtil.validateToken(authToken, userId)) {
-
                     if (!description.isBlank()) {
                         Comment comment = new Comment();
                         comment.setContent(description);
-                        commentService.saveComment(comment, tripId);
+                        commentService.saveComment(comment, tripId, userId);
                     }
                 }
                 return "redirect:/tripcard?tripId=" + tripId + "&userId=" + userId;

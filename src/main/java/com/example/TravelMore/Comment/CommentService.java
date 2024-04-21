@@ -1,5 +1,7 @@
 package com.example.TravelMore.Comment;
 
+import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.UserAccount.UserService;
 import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripService;
 import jakarta.validation.Valid;
@@ -13,17 +15,23 @@ import java.util.Optional;
 @Service
 public class CommentService {
 
-    private final com.example.TravelMore.Comment.CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+    private final UserService userService;
     private final TripService tripService;
 
     @Autowired
-    public CommentService(com.example.TravelMore.Comment.CommentRepository commentRepository, TripService tripService) {
+    public CommentService(CommentRepository commentRepository, UserService userService, TripService tripService) {
         this.commentRepository = commentRepository;
+        this.userService = userService;
         this.tripService = tripService;
     }
 
-
-    public Comment saveComment(@Valid Comment comment, Long tripId) {
+    public Comment saveComment(@Valid Comment comment, Long tripId, Long userId) {
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        comment.setUser(user);
         LocalDateTime now = LocalDateTime.now();
         if (comment.getCreatedAt() == null) {
             comment.setCreatedAt(now);

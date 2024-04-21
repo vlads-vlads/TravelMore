@@ -381,7 +381,8 @@
                     <!-- Adjust the card size using custom CSS classes -->
                     <div class="card custom-card-size">
                         <div class="card-body">
-                            <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
+<!--                            <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">-->
+                            <a th:href="@{'/tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
                                 <img class="card-image" th:src="${trip.imageUrl}" id="complTripImageDisplay-${trip.id}" alt="Trip Image">
                                 <div class="text-card">
                                     <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>

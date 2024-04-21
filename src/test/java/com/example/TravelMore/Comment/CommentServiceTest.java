@@ -32,12 +32,13 @@ class CommentServiceTest {
         // Arrange
         Comment comment = new Comment();
         Long tripId = 1L;
+        Long userId = 1L;
         Trip trip = new Trip();
         when(tripService.getTripById(tripId)).thenReturn(trip);
         when(commentRepository.save(comment)).thenReturn(comment);
 
         // Act
-        Comment result = commentService.saveComment(comment, tripId);
+        Comment result = commentService.saveComment(comment, tripId, userId); // Pass userId
 
         // Assert
         assertNotNull(result);
@@ -49,11 +50,12 @@ class CommentServiceTest {
     void testSaveComment_InvalidTripId() {
         // Arrange
         Comment comment = new Comment();
+        Long userId = 1L;
         Long tripId = 1L;
         when(tripService.getTripById(tripId)).thenThrow(new IllegalArgumentException());
 
         // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> commentService.saveComment(comment, tripId));
+        assertThrows(IllegalArgumentException.class, () -> commentService.saveComment(comment, tripId, userId));
         verify(commentRepository, never()).save(any(Comment.class));
     }
 

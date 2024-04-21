@@ -469,7 +469,13 @@
                     </form>
                     <div class="comment-container">
                         <div th:each="comment : ${comments}" class="comment">
-                            <p class="comment-date" th:text="${comment.getCreatedAt()}">April 18, 2024</p>
+                            <div class="d-flex align-items-center mb-2">
+                                <img th:if="${comment.getUser() != null && comment.getUser().getUrl() != null}" th:src="${comment.getUser().getUrl()}" alt="Avatar" class="rounded-circle mr-3" style="width: 30px; height: 30px;">
+                                <img th:unless="${comment.getUser() != null && comment.getUser().getUrl() != null}" src="/images/FjU2lkcWYAgNG6d.jpg" alt="Default Avatar" class="rounded-circle mr-3" style="width: 30px; height: 30px;">
+                                <a th:if="${comment.getUser() != null}" th:href="@{'/profile/' + ${comment.getUser().getId()}}" th:text="${comment.getUser().getUserName()}" class="font-weight-bold"></a>
+                                <span th:if="${comment.getUser() == null}">Anonymous</span>
+                            </div>
+                            <p class="comment-date mb-1" th:text="${comment.getCreatedAt()}">April 18, 2024</p>
                             <p class="comment-content" th:text="${comment.getContent()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                         </div>
                     </div>
