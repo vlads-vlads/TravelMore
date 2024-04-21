@@ -63,22 +63,17 @@ public class MainController {
         }
         User loggedInUser = userService.getUserById(user.getId());
 
-        List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
+        List<Trip> allTrips = tripService.getTripsCreatedByUser(user.getId());
 
-        List<Trip> completeTrips = trips.stream()
-                .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
-                .collect(Collectors.toList());
+        List<Trip> posts = allTrips.stream().filter(Trip::isAPost).collect(Collectors.toList());
+        List<Trip> trips = allTrips.stream().filter(trip -> !trip.isAPost()).collect(Collectors.toList());
 
-        List<Trip> incompleteTrips = trips.stream()
-                .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
-                .collect(Collectors.toList());
-
-        completeTrips.sort(Comparator.comparing(Trip::getStartDate));
-//        incompleteTrips.sort(Comparator.comparing(Trip::getStartDate));
+        posts.sort(Comparator.comparing(Trip::getStartDate));
+        trips.sort(Comparator.comparing(Trip::getStartDate));
         model.addAttribute("user", user);
-        model.addAttribute("incompleteTrips", incompleteTrips);
+        model.addAttribute("incompleteTrips", trips);
         model.addAttribute("loggedInUser", loggedInUser);
-        model.addAttribute("completeTrips", completeTrips);
+        model.addAttribute("completeTrips", posts);
 
         return "main";
     }
@@ -93,22 +88,18 @@ public class MainController {
 
                 User user = userService.getUserById(authenticatedUserId);
                 if (user != null) {
-                    List<Trip> trips = tripService.getTripsCreatedByUser(user.getId());
 
-                    List<Trip> completeTrips = trips.stream()
-                            .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
-                            .collect(Collectors.toList());
+                    List<Trip> allTrips = tripService.getTripsCreatedByUser(user.getId());
 
-                    List<Trip> incompleteTrips = trips.stream()
-                            .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
-                            .collect(Collectors.toList());
+                    List<Trip> posts = allTrips.stream().filter(Trip::isAPost).collect(Collectors.toList());
+                    List<Trip> trips = allTrips.stream().filter(trip -> !trip.isAPost()).collect(Collectors.toList());
 
-                    completeTrips.sort(Comparator.comparing(Trip::getStartDate));
-//                incompleteTrips.sort(Comparator.comparing(Trip::getStartDate));
+                    posts.sort(Comparator.comparing(Trip::getStartDate));
+                    trips.sort(Comparator.comparing(Trip::getStartDate));
                     model.addAttribute("user", user);
-                    model.addAttribute("incompleteTrips", incompleteTrips);
+                    model.addAttribute("incompleteTrips", trips);
                     model.addAttribute("loggedInUser", loggedInUser);
-                    model.addAttribute("completeTrips", completeTrips);
+                    model.addAttribute("completeTrips", posts);
 
                     return "main";
                 }
@@ -123,21 +114,18 @@ public class MainController {
             Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
                 User user = userService.getUserById(authenticatedUserId);
+
                 List<Trip> allTrips = tripService.getAllTrips();
 
-                List<Trip> completeTrips = allTrips.stream()
-                        .filter(trip -> trip.getStartDate() != null && trip.getEndDate() != null)
-                        .collect(Collectors.toList());
+                List<Trip> posts = allTrips.stream().filter(Trip::isAPost).collect(Collectors.toList());
+                List<Trip> trips = allTrips.stream().filter(trip -> !trip.isAPost()).collect(Collectors.toList());
 
-                List<Trip> incompleteTrips = allTrips.stream()
-                        .filter(trip -> trip.getStartDate() == null || trip.getEndDate() == null)
-                        .collect(Collectors.toList());
-
-                completeTrips.sort(Comparator.comparing(Trip::getStartDate));
+                posts.sort(Comparator.comparing(Trip::getStartDate));
+                trips.sort(Comparator.comparing(Trip::getStartDate));
 
                 model.addAttribute("user", user);
-                model.addAttribute("completeTrips", completeTrips);
-                model.addAttribute("incompleteTrips", incompleteTrips);
+                model.addAttribute("completeTrips", trips);
+                model.addAttribute("incompleteTrips", posts);
                 model.addAttribute("loggedInUser", user);
 
                 return "explore";
@@ -155,6 +143,7 @@ public class MainController {
                 Trip trip = tripService.getTripById(tripId);
                 User user = userService.getUserById(userId);
                 Set<User> participants = trip.getParticipants();
+
 
                 if (trip != null && user != null) {
                     List<Comment> comments = commentService.getCommentsForTrip(tripId);

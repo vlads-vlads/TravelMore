@@ -296,7 +296,7 @@
     </div>
 </nav>
 
-<div class="button-container" style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+.<div class="button-container" style="display: flex; justify-content: center; align-items: center; gap: 20px;">
     <button class="btn btn-primary btn-post-trip" data-toggle="modal" data-target="#shareTripModal">
         Add a Trip
     </button>
@@ -406,19 +406,18 @@
                     </p>
                     <p class="card-text" th:text="${trip.description}">Description</p>
 
-                <th:block th:if="${images != null and not #lists.isEmpty(images)}">
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
-
+                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                             <th:block th:each="image, index : ${images}">
                                 <li data-target="#carouselExampleIndicators" th:data-slide-to="${index}" th:class="${index == 0} ? 'active' : ''"></li>
                             </th:block>
                         </ol>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img class="d-block w-100" th:src="'data:image/jpg;base64,' + ${images[0].getBase64image()}" alt="Placeholder Image">
+                                <img class="d-block w-100" src="https://flagsapi.com/BE/flat/64.png" alt="Placeholder Image">
                             </div>
-                            <th:block th:each="image, iterStat : ${images}" th:if="${not iterStat.first}">
+                            <th:block th:each="image : ${images}">
                                 <div class="carousel-item">
                                     <img class="d-block w-100" th:src="'data:image/jpg;base64,' + ${image.getBase64image()}" alt="Image">
                                 </div>
@@ -433,7 +432,7 @@
                             <span class="sr-only">Next</span>
                         </a>
                     </div>
-                </th:block>
+                </div>
 
                 <div class="profile-pics-container row justify-content-center">
                     <div th:each="participant : ${participants}" class="col-6 col-md-4 col-lg-2 d-flex justify-content-center mb-3">
@@ -449,14 +448,15 @@
                     </div>
                 </div>
 
-                <div class="button-container">
+                <div class="button-container" th:if="${!trip.isAPost() && loggedInUser.id != trip.creator.id}">
                     <form id="requestForm" th:action="@{/join-requests/send-to-user}" method="post">
                         <input type="hidden" name="tripId" th:value="${trip.id}">
-                        <input type="hidden" name="receiver" th:value="${trip.getCreator().getId()}">
+                        <input type="hidden" name="receiver" th:value="${trip.creator.id}">
                         <input type="hidden" name="requester" th:value="${loggedInUser.id}">
                         <button type="submit" class="btn btn-request">Send Request</button>
                     </form>
                 </div>
+
 
                 <div class="card-footer">
                     <form class="comment-form" th:action="@{/comments/comment/add}" method="post">
@@ -469,13 +469,7 @@
                     </form>
                     <div class="comment-container">
                         <div th:each="comment : ${comments}" class="comment">
-                            <div class="d-flex align-items-center mb-2">
-                                <img th:if="${comment.getUser() != null && comment.getUser().getUrl() != null}" th:src="${comment.getUser().getUrl()}" alt="Avatar" class="rounded-circle mr-3" style="width: 30px; height: 30px;">
-                                <img th:unless="${comment.getUser() != null && comment.getUser().getUrl() != null}" src="/images/FjU2lkcWYAgNG6d.jpg" alt="Default Avatar" class="rounded-circle mr-3" style="width: 30px; height: 30px;">
-                                <a th:if="${comment.getUser() != null}" th:href="@{'/profile/' + ${comment.getUser().getId()}}" th:text="${comment.getUser().getUserName()}" class="font-weight-bold"></a>
-                                <span th:if="${comment.getUser() == null}">Anonymous</span>
-                            </div>
-                            <p class="comment-date mb-1" th:text="${comment.getCreatedAt()}">April 18, 2024</p>
+                            <p class="comment-date" th:text="${comment.getCreatedAt()}">April 18, 2024</p>
                             <p class="comment-content" th:text="${comment.getContent()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                         </div>
                     </div>

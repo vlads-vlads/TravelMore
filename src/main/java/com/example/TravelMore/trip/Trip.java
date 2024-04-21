@@ -21,9 +21,12 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_sequence")
     private Long id;
 
+    @Column(length = 2000)
     private String description;
 
     private String imageUrl;
+
+    private boolean isAPost;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -80,6 +83,22 @@ public class Trip {
         this.endDate = endDate;
         this.participants = participants;
         this.description = description;
+        this.comments = comments;
+    }
+
+    public boolean isAPost() {
+        return isAPost;
+    }
+
+    public void setAPost(boolean APost) {
+        isAPost = APost;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 

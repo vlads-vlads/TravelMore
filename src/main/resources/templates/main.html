@@ -324,45 +324,57 @@
 </div>
 
 
-<div class="modal fade" id="writePostModal" tabindex="-1" role="dialog" aria-labelledby="writePostModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="writePostModalLabel">Write Your Post</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="writePostForm" th:action="@{/trips/add}" method="post" enctype="multipart/form-data">
-                        <input type="hidden" id="editTripId2" name="tripId">
-                        <input type="hidden" name="creator" th:value="${user.getId()}">
-                        <div class="form-group">
-                            <label for="tripName">Country</label>
-                            <select class="form-control" id="tripName2" name="destination">
 
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="tripDescription">Description</label>
-                            <textarea class="form-control" id="tripDescription2" name="description" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="tripImage">Trip Image</label>
-                            <input type="file" class="form-control-file" id="tripImage2" name="files[]" multiple>
-                        </div>
-                    </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-info" form="writePostForm">Post</button>
-                </div>
+<!-- Write Your Post Modal -->
+<div class="modal fade" id="writePostModal" tabindex="-1" role="dialog" aria-labelledby="writePostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="writePostModalLabel">Write Your Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="writePostForm" th:action="@{/trips/add}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="editTripId2" name="tripId">
+                    <input type="hidden" name="creator" th:value="${user.getId()}">
+                    <div class="form-group">
+                        <label for="tripName">Country</label>
+                        <select class="form-control" id="tripName2" name="destination">
+                            <!-- Options will be dynamically populated -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tripDate">Start Date</label>
+                        <input type="date" class="form-control" id="tripDate2" name="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="tripEndDate">End Date</label>
+                        <input type="date" class="form-control" id="tripEndDate2" name="endDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="tripDescription">Description</label>
+                        <textarea class="form-control" id="tripDescription2" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="tripImage">Trip Image</label>
+                        <input type="file" class="form-control-file" id="tripImage2" name="files[]" multiple>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="hidden" id="randomImageUrl2" name="randomImageUrl">
+                        <input type="hidden" id="isAPost2" name="isAPost" value="true">
+                        <button type="submit" class="btn btn-info">Post</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-</div>
 
-<div class="modal fade" id="shareTripModal" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel" aria-hidden="true">
+<!-- Add Your Trip Modal -->
+<div class="modal fade" id="shareTripModal" tabindex="-1" role="dialog" aria-labelledby="shareTripModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -378,7 +390,7 @@
                     <div class="form-group">
                         <label for="tripName">Destination</label>
                         <select class="form-control" id="tripName" name="destination">
-
+                            <!-- Options will be dynamically populated -->
                         </select>
                     </div>
                     <div class="form-group">
@@ -400,6 +412,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <input type="hidden" id="randomImageUrl" name="randomImageUrl">
+                        <<input type="hidden" id="isAPost" name="isAPost" value="false">
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
@@ -407,6 +420,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="content-background" id="tripCardsContainer">
     <div class="container">
@@ -448,8 +462,17 @@
                     </form>
                     <div class="card-body2">
                         <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
+                            <img class="card-image" th:src="${trip.imageUrl}" id="incComplTripImageDisplay-${trip.id}" alt="Trip Image">
+                            <div class="text-card">
                             <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                             <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
+                                <p class="card-text">
+                                    <span th:text="${#dates.format(trip.getStartDate(), 'yyyy.MM.dd')}">Start Date</span> /
+                                    <span th:text="${#dates.format(trip.getEndDate(), 'yyyy.MM.dd')}">End Date</span>
+                                </p>
+                                <p class="card-text duration" th:text="${trip.getDuration()} + ' Days'">Duration</p>
+                            </div>
+
                         </a>
                     </div>
                 </div>

@@ -13,5 +13,4 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findByParticipantsId(Long userId);
 
     List<Trip> findByCreatorId(Long userId);
-
 }

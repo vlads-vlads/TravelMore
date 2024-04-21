@@ -52,6 +52,7 @@ public class TripController {
                           @RequestParam(value = "files[]", required = false) MultipartFile[] files,
                           @RequestParam("description") String description,
                           @RequestParam("randomImageUrl") String randomImageUrl,
+                          @RequestParam("isAPost") String isAPostString,
                           Model model) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -72,6 +73,10 @@ public class TripController {
                 return "errorPage";
             }
 
+            boolean isAPost = "true".equalsIgnoreCase(isAPostString);
+            trip.setAPost(isAPost);
+
+            System.out.println(isAPost);
 
             trip.setImageUrl(randomImageUrl);
 
@@ -89,6 +94,7 @@ public class TripController {
             return "errorPage";
         }
     }
+
 
     @GetMapping("/{id}/update")
     public String showUpdateTripForm(@PathVariable("id") Long tripId, Model model) {

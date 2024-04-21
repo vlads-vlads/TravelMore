@@ -86,12 +86,10 @@ public class UserService {
 
     public void updateUserAvatar(Long userId, String avatarFileName) {
         User user = userRepository.findById(userId).orElse(null);
-        System.out.println(avatarFileName + "sff");
 
         if (user != null) {
             user.setUrl(avatarFileName);
             userRepository.save(user);
-            System.out.println(user.getUrl());
         } else {
             throw new IllegalArgumentException("User not found");
         }

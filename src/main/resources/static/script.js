@@ -1,21 +1,29 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetchCountries();
+    fetchCountries('tripName');
+    fetchCountries('tripName2');
+
     const shareTripForm = document.getElementById('shareTripForm');
     shareTripForm.addEventListener('submit', function(event) {
         event.preventDefault();
+        fetchRandomImageAndSubmitForm('tripName');
+    });
 
-        fetchRandomImageAndSubmitForm();
+    const writePostForm = document.getElementById('writePostForm');
+    writePostForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        fetchRandomImageAndSubmitForm('tripName2');
     });
 });
 
-function fetchCountries() {
+function fetchCountries(elementId) {
     const url = 'https://restcountries.com/v3.1/all';
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
             const countries = data.map(country => country.name.common);
-            const selectDropdown = document.getElementById('tripName');
+            const selectDropdown = document.getElementById(elementId);
+            selectDropdown.innerHTML = ''; // Clear existing options
             countries.forEach(country => {
                 const option = document.createElement('option');
                 option.text = country;
@@ -26,20 +34,22 @@ function fetchCountries() {
         .catch(error => console.error('Error fetching countries:', error));
 }
 
-function fetchRandomImageAndSubmitForm() {
-    const tripName = document.getElementById('tripName').value;
+function fetchRandomImageAndSubmitForm(tripNameElementId) {
+    const tripName = document.getElementById(tripNameElementId).value;
     const imageUrl = `https://api.unsplash.com/photos/random?query=${tripName}&orientation=landscape&client_id=u2wkrKKJxinMI8ocyh-Xm7euYttlDtgp3Fdg7XPFtd4`;
 
     fetch(imageUrl)
         .then(response => response.json())
         .then(data => {
             const imageSrc = data.urls.regular;
-            document.getElementById('randomImageUrl').value = imageSrc;
+            const randomImageUrlField = document.getElementById(tripNameElementId === 'tripName' ? 'randomImageUrl' : 'randomImageUrl2');
+            randomImageUrlField.value = imageSrc;
 
-            document.getElementById('shareTripForm').submit();
+            document.getElementById(tripNameElementId === 'tripName' ? 'shareTripForm' : 'writePostForm').submit();
         })
         .catch(error => console.error('Error fetching random image:', error));
 }
+
 
 window.onload = fetchCountries;
 
@@ -93,21 +103,18 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('toggleButton3').addEventListener('click', toggleCards3);
         }
 
-    function toggleCards4() {
-                var tripCardsContainer4 = document.getElementById('tripCardsContainer4');
-                var postCardsContainer4 = document.getElementById('postCardsContainer4');
-                if (tripCardsContainer4.style.display === 'none') {
-                    tripCardsContainer4.style.display = 'block';
-                    postCardsContainer4.style.display = 'none';
-                } else {
-                    tripCardsContainer4.style.display = 'none';
-                    postCardsContainer4.style.display = 'block';
-                }
-            }
+   function toggleContainers() {
+          var tripCardsContainer = document.getElementById('tripCardsContainer4');
+          var postCardsContainer = document.getElementById('postCardsContainer4');
 
-            if (document.getElementById('toggleButton4')) {
-                document.getElementById('toggleButton4').addEventListener('click', toggleCards4);
-            }
+          if (tripCardsContainer.style.display === 'none') {
+              tripCardsContainer.style.display = 'block';
+              postCardsContainer.style.display = 'none';
+          } else {
+              tripCardsContainer.style.display = 'none';
+              postCardsContainer.style.display = 'block';
+          }
+      }
 });
 
 
@@ -115,7 +122,11 @@ function search() {
     var input, filter, cards, card, i, txtValue;
     input = document.getElementById('searchInput');
     filter = input.value.toUpperCase();
-    cards = document.getElementsByClassName('card');
+
+    var tripCards = document.getElementById('tripCardsContainer2').getElementsByClassName('card');
+    var postCards = document.getElementById('postCardsContainer2').getElementsByClassName('card2');
+
+    cards = Array.from(tripCards).concat(Array.from(postCards));
 
     for (i = 0; i < cards.length; i++) {
         card = cards[i];

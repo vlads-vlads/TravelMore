@@ -326,14 +326,15 @@
                     </div>
                 </li>
             </ul>
-            <img th:if="${user.url != null}" th:src="${user.url}" alt="Profile Picture" class="rounded-circle avatar-img">
-            <img th:if="${user.url == null}" src="/images/FjU2lkcWYAgNG6d.jpg" alt="Default Profile Picture" class="rounded-circle avatar-img">
+            <img th:if="${loggedInUser.url != null}" th:src="${user.url}" alt="Profile Picture" class="rounded-circle avatar-img">
+            <img th:if="${loggedInUser.url == null}" src="/images/FjU2lkcWYAgNG6d.jpg" alt="Default Profile Picture" class="rounded-circle avatar-img">
         </div>
     </div>
 </nav>
 
 <div class="container" style="text-align: center;">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#avatarModal">
+    <!-- Add Thymeleaf condition to show the button only if the user is viewing their own profile -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#avatarModal" th:if="${loggedInUser.id == user.id}">
         Select Profile Picture
     </button>
 </div>
@@ -367,8 +368,9 @@
     </div>
 </div>
 
-<div class="button-container" style="text-align: center; margin-top: 20px;">
-    <button class="btn btn-info" id="toggleButton4" onclick="toggleViews();">Toggle Trips/Posts</button>
+<!--<div class="button-container" style="text-align: center; margin-top: 20px;">-->
+<!--    <button class="btn btn-info" id="toggleButton4" onclick="toggleContainers();">Toggle Trips/Posts</button>-->
+<!--</div>-->
 
 
 
@@ -381,7 +383,6 @@
                     <!-- Adjust the card size using custom CSS classes -->
                     <div class="card custom-card-size">
                         <div class="card-body">
-<!--                            <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">-->
                             <a th:href="@{'/tripcard?tripId=' + ${trip.id} + '&userId=' + ${trip.creator.id}}" class="card-link">
                                 <img class="card-image" th:src="${trip.imageUrl}" id="complTripImageDisplay-${trip.id}" alt="Trip Image">
                                 <div class="text-card">
@@ -415,7 +416,7 @@
                     <div class="card2">
                         <div class="card-body2">
                             <img class="card-image" th:src="${trip.imageUrl}" id="incomplTripImageDisplay-${trip.id}" alt="Trip Image">
-                            <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${loggedInUser.id}}" class="card-link">
+                            <a th:href="@{'tripcard?tripId=' + ${trip.id} + '&userId=' + ${user.id}}" class="card-link">
                                 <h5 class="card-title username" th:text="${trip.getCreator().getUserName()}">Username</h5>
                                 <p class="card-text" th:text="${trip.getDestination()}">Destination</p>
                             </a>
@@ -437,6 +438,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="script.js"></script>
 
 
 

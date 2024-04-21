@@ -71,6 +71,11 @@ public class TripService {
         User participant = joinRequest.getRequester();
         trip.getParticipants().add(participant);
 
+        System.out.println(participant.getId() + " requester");
+        System.out.println(participant.getUrl() + " requester url");
+
+
+
         tripRepository.save(trip);
         joinRequestRepository.delete(joinRequest);
     }
@@ -100,4 +105,5 @@ public class TripService {
         Trip trip = tripRepository.findById(tripId).orElse(null);
         return trip != null && trip.getParticipants().stream().anyMatch(user -> user.getId().equals(userId));
     }
+
 }
