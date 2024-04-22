@@ -209,4 +209,34 @@ class UserServiceTest {
         assertNull(result);
     }
 
+    @Test
+    void testUpdateUserAvatar_ValidInput() {
+        // Arrange
+        Long userId = 1L;
+        String avatarFileName = "new_avatar.jpg";
+        User user = new User();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // Act
+        userService.updateUserAvatar(userId, avatarFileName);
+
+        // Assert
+        assertEquals(avatarFileName, user.getUrl());
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void testUpdateUserAvatar_UserNotFound() {
+        // Arrange
+        Long userId = 1L;
+        String avatarFileName = "new_avatar.jpg";
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(IllegalArgumentException.class, () -> userService.updateUserAvatar(userId, avatarFileName));
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
 }

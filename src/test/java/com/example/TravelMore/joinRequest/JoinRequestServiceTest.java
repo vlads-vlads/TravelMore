@@ -4,6 +4,7 @@ import com.example.TravelMore.UserAccount.User;
 import com.example.TravelMore.UserAccount.UserRepository;
 import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripRepository;
+import com.example.TravelMore.trip.TripService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +27,9 @@ class JoinRequestServiceTest {
 
     @Mock
     private TripRepository tripRepository;
+
+    @Mock
+    private TripService tripService;
 
     @Mock
     private UserRepository userRepository;
@@ -113,4 +118,66 @@ class JoinRequestServiceTest {
         assertEquals(expectedJoinRequests, result);
         verify(joinRequestRepository, times(1)).findByTripId(tripId);
     }
+
+    @Test
+    void testGetAllJoinRequests() {
+        // Arrange
+        List<JoinRequest> expectedJoinRequests = new ArrayList<>();
+        when(joinRequestRepository.findAll()).thenReturn(expectedJoinRequests);
+
+        // Act
+        List<JoinRequest> result = joinRequestService.getAllJoinRequests();
+
+        // Assert
+        assertEquals(expectedJoinRequests, result);
+        verify(joinRequestRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testApproveJoinRequest() {
+        // Arrange
+        Long requestId = 1L;
+        JoinRequest joinRequest = new JoinRequest();
+        when(joinRequestRepository.findById(requestId)).thenReturn(Optional.of(joinRequest));
+
+        // Act
+        joinRequestService.approveJoinRequest(requestId);
+
+        // Assert
+        verify(tripService, times(1)).acceptJoinRequest(requestId);
+        verify(joinRequestRepository, times(1)).findById(requestId);
+    }
+
+    @Test
+    void testDeclineJoinRequest() {
+        // Arrange
+        Long requestId = 1L;
+        JoinRequest joinRequest = new JoinRequest();
+        when(joinRequestRepository.findById(requestId)).thenReturn(Optional.of(joinRequest));
+
+        // Act
+        joinRequestService.declineJoinRequest(requestId);
+
+        // Assert
+        verify(joinRequestRepository, times(1)).delete(joinRequest);
+        verify(joinRequestRepository, times(1)).findById(requestId);
+    }
+
+    @Test
+    void testExistsJoinRequest() {
+        // Arrange
+        Long tripId = 1L;
+        Long receiverId = 2L;
+        Long requesterId = 3L;
+        JoinRequest joinRequest = new JoinRequest();
+        when(joinRequestRepository.findByTripIdAndReceiverIdAndRequesterId(tripId, receiverId, requesterId)).thenReturn(joinRequest);
+
+        // Act
+        boolean result = joinRequestService.existsJoinRequest(tripId, receiverId, requesterId);
+
+        // Assert
+        assertTrue(result);
+        verify(joinRequestRepository, times(1)).findByTripIdAndReceiverIdAndRequesterId(tripId, receiverId, requesterId);
+    }
+
 }

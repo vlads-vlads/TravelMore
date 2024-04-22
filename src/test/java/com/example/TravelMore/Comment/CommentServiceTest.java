@@ -1,5 +1,7 @@
 package com.example.TravelMore.Comment;
 
+import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.UserAccount.UserService;
 import com.example.TravelMore.trip.Trip;
 import com.example.TravelMore.trip.TripService;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,9 @@ class CommentServiceTest {
     @Mock
     private TripService tripService;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private CommentService commentService;
 
@@ -34,11 +39,13 @@ class CommentServiceTest {
         Long tripId = 1L;
         Long userId = 1L;
         Trip trip = new Trip();
+        User user = new User();
         when(tripService.getTripById(tripId)).thenReturn(trip);
+        when(userService.getUserById(userId)).thenReturn(user);
         when(commentRepository.save(comment)).thenReturn(comment);
 
         // Act
-        Comment result = commentService.saveComment(comment, tripId, userId); // Pass userId
+        Comment result = commentService.saveComment(comment, tripId, userId);
 
         // Assert
         assertNotNull(result);
@@ -52,7 +59,6 @@ class CommentServiceTest {
         Comment comment = new Comment();
         Long userId = 1L;
         Long tripId = 1L;
-        when(tripService.getTripById(tripId)).thenThrow(new IllegalArgumentException());
 
         // Act and Assert
         assertThrows(IllegalArgumentException.class, () -> commentService.saveComment(comment, tripId, userId));

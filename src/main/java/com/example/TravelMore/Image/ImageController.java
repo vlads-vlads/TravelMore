@@ -27,7 +27,7 @@ public class ImageController {
         List<Image> photos = imageService.getImagesByTrip(trip);
         if (photos == null) {
             model.addAttribute("error", "Photos not found for the trip");
-            return "error";
+            return "errorPage";
         }
 
         model.addAttribute("photos", photos);

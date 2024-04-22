@@ -114,14 +114,16 @@ public class UserControllerWeb {
 
     @PostMapping("/login")
     public String login(@ModelAttribute("loginRequest") LoginRequest loginRequest, Model model) {
-        User user = userService.authenticateUser(loginRequest);
-        if (user != null) {
-            String token = jwtTokenUtil.generateToken(user.getId());
-            model.addAttribute("token", token);
+        try {
+            User user = userService.authenticateUser(loginRequest);
+            if (user != null) {
+                String token = jwtTokenUtil.generateToken(user.getId());
+                model.addAttribute("token", token);
+            }
             return "userAccount";
-        } else {
+        } catch (Exception e) {
             model.addAttribute("error", "Invalid username/password");
-            return "signUp";
+            return "errorPage";
         }
     }
 
@@ -131,13 +133,6 @@ public class UserControllerWeb {
         model.addAttribute("participatedTrips", participatedTrips);
         return "participatedTrips";
     }
-
-//    @GetMapping("/{userId}/join-requests")
-//    public String getJoinRequestsForUser(@PathVariable Long userId, Model model) {
-//        List<JoinRequest> joinRequests = joinRequestService.getJoinRequestsForUser(userId);
-//        model.addAttribute("joinRequests", joinRequests);
-//        return "joinRequests";
-//    }
 
     @GetMapping("/{userId}/created-trips")
     public String getCreatedTrips(@PathVariable Long userId, Model model) {
