@@ -153,13 +153,6 @@
             z-index: 999;
         }
 
-        .btn-danger {
-            position: absolute;
-            top: 22px;
-            right: 22px;
-            margin-left: 0;
-        }
-
         .duration {
             font-weight: bold;
             color: #FF5722;
@@ -172,34 +165,63 @@
         }
 
         .content-background {
-            background-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.7);
             padding: 20px;
             margin: 20px auto;
             max-width: 600px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
-        .content-background {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .content-background .h2 {
+            font-size: 28px;
         }
 
         .request-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 7px;
+            padding: 15px;
             margin-bottom: 10px;
+            transition: background-color 0.2s ease;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-item: center;
+            flex-wrap: wrap;
         }
 
-        .request-item:hover {
-            background-color: #f5f5f5;
+        .request-text {
+            margin-bottom: 15px;
         }
+
+        .btn {
+            width: 80px;
+            height: 35px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .button-container {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .button-container form {
+            display: flex;
+            margin: 0;
+        }
+
+        .request-item {
+            display: flex;
+            align-items: flex-start;
+         }
 
         .avatar-img {
             width: 80px;
@@ -256,8 +278,6 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" th:href="@{/profile/{userId}(userId=${loggedInUser.id})}">Profile</a>
-                        <a class="dropdown-item" th:href="@{/upcomingTrips}">Upcoming Trips</a>
-                        <a class="dropdown-item" th:href="@{/pastTrips}">Past Trips</a>
                         <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
                     </div>
                 </li>
@@ -323,26 +343,22 @@
 </div>
 
 <div class="container" id="requestsContainer">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="d-flex justify-content-center">
             <div class="content-background">
                 <h2>Join Requests</h2>
                 <ul class="list-group">
-                    <!-- Iterate over the list of requests -->
                     <li class="list-group-item request-item" th:each="request : ${requests}">
-                        <!-- Display request details -->
-                        <span th:text="${request.getRequester().getUserName()} + ' wants to join you on trip to ' + ${request.getTrip().getDestination()} + ' on ' + ${request.getTrip().getStartDate()} + '. You don\'t mind a little company?'"></span>
-                        <!-- Buttons for actions on the request -->
+                        <span class="request-text" th:text="${request.getRequester().getUserName()} + ' wants to join you on trip to ' + ${request.getTrip().getDestination()} + ' on ' + ${request.getTrip().getStartDate()} + '. You don\'t mind a little company?'"></span>
                         <div class="button-container">
-                            <!-- Button to approve request -->
-                            <form th:action="@{/join-requests/approve}" method="post">
+                            <form th:action="@{/join-requests/approve}" method="post" class="approve-form">
                                 <input type="hidden" name="requestId" th:value="${request.id}">
-                                <button type="submit" class="btn btn-success rounded-circle">Approve</button>
+                                <button type="submit" class="btn btn-success">Approve</button>
                             </form>
-                            <!-- Button to decline request -->
-                            <form th:action="@{/join-requests/decline}" method="post">
+                            <form th:action="@{/join-requests/decline}" method="post" class="decline-form">
                                 <input type="hidden" name="requestId" th:value="${request.id}">
-                                <button type="submit" class="btn btn-danger rounded-circle">Decline</button>
+                                <button type="submit" class="btn btn-danger">Decline</button>
                             </form>
                         </div>
                     </li>
@@ -350,6 +366,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <div class="footer">

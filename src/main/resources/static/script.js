@@ -57,12 +57,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleCards() {
         var tripCardsContainer = document.getElementById('tripCardsContainer',);
         var postCardsContainer = document.getElementById('postCardsContainer');
+        var viewCaption = document.getElementById('viewCaption');
+
         if (tripCardsContainer.style.display === 'none') {
             tripCardsContainer.style.display = 'block';
             postCardsContainer.style.display = 'none';
+            viewCaption.textContent = 'My Trips';
         } else {
             tripCardsContainer.style.display = 'none';
             postCardsContainer.style.display = 'block';
+            viewCaption.textContent = 'My Posts';
         }
     }
 
@@ -73,12 +77,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleCards2() {
         var tripCardsContainer2 = document.getElementById('tripCardsContainer2');
         var postCardsContainer2 = document.getElementById('postCardsContainer2');
+        var viewCaption = document.getElementById('viewCaption2');
+
         if (tripCardsContainer2.style.display === 'none') {
             tripCardsContainer2.style.display = 'block';
             postCardsContainer2.style.display = 'none';
+            viewCaption.textContent = 'Trips';
+
         } else {
             tripCardsContainer2.style.display = 'none';
             postCardsContainer2.style.display = 'block';
+            viewCaption.textContent = 'Posts';
         }
     }
 

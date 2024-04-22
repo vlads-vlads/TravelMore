@@ -188,9 +188,9 @@
         }
 
         .profile-header {
-            color: #495057;
+            color: white;
             font-family: 'Arial', sans-serif;
-            font-size: 1.5em;
+            font-size: 28px;
             margin: 0;
             padding: 10px 20px;
             border-radius: 10px;
@@ -276,6 +276,7 @@
 
     }
 
+
     </style>
 </head>
 <body>
@@ -320,8 +321,6 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" th:href="@{/profile/{userId}(userId=${loggedInUser.id})}">Profile</a>
-                        <a class="dropdown-item" th:href="@{/upcomingTrips}">Upcoming Trips</a>
-                        <a class="dropdown-item" th:href="@{/pastTrips}">Past Trips</a>
                         <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
                     </div>
                 </li>
