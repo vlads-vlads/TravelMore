@@ -71,9 +71,9 @@ public class MainController {
         posts.sort(Comparator.comparing(Trip::getStartDate));
         trips.sort(Comparator.comparing(Trip::getStartDate));
         model.addAttribute("user", user);
-        model.addAttribute("incompleteTrips", trips);
+        model.addAttribute("completeTrips", trips);
         model.addAttribute("loggedInUser", loggedInUser);
-        model.addAttribute("completeTrips", posts);
+        model.addAttribute("incompleteTrips", posts);
 
         return "main";
     }
@@ -97,9 +97,9 @@ public class MainController {
                     posts.sort(Comparator.comparing(Trip::getStartDate));
                     trips.sort(Comparator.comparing(Trip::getStartDate));
                     model.addAttribute("user", user);
-                    model.addAttribute("incompleteTrips", trips);
+                    model.addAttribute("completeTrips", trips);
                     model.addAttribute("loggedInUser", loggedInUser);
-                    model.addAttribute("completeTrips", posts);
+                    model.addAttribute("incompleteTrips", posts);
 
                     return "main";
                 }
