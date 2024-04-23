@@ -17,7 +17,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> {
                     auth.requestMatchers("/api/travelMore/register").permitAll();
-                    auth.requestMatchers("/api/trips/add").permitAll();
 
                 });
 

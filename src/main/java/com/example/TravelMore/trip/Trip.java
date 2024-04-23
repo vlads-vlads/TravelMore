@@ -21,7 +21,7 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_sequence")
     private Long id;
 
-    @Column(length = 2000)
+    @Column(length = 4000)
     private String description;
 
     private String imageUrl;

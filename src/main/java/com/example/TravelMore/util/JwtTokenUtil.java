@@ -1,5 +1,4 @@
 package com.example.TravelMore.util;
-import com.example.TravelMore.UserAccount.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

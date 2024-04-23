@@ -26,7 +26,7 @@ public class UserService {
         }
         String password = user.getUserPassword();
         if (password == null || password.length() < 8 || !isPasswordComplex(password)) {
-            throw new IllegalArgumentException("Password must be at least 8 characters long and contain " +
+            throw new IllegalArgumentException("Where are you going, buddy? For your own safety, we want you to use a strong password ;) Password must be at least 8 characters long and contain " +
                     "at least one uppercase letter, one lowercase letter, one digit, and one special character.");
         }
 
