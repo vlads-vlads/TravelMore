@@ -1,6 +1,7 @@
 package com.example.TravelMore.trip;
 
 import com.example.TravelMore.UserAccount.User;
+import com.example.TravelMore.UserAccount.UserService;
 import com.example.TravelMore.joinRequest.JoinRequest;
 import com.example.TravelMore.joinRequest.JoinRequestRepository;
 import com.example.TravelMore.joinRequest.JoinRequestStatus;
@@ -23,6 +24,9 @@ class TripServiceTest {
 
     @Mock
     private JoinRequestRepository joinRequestRepository;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private TripService tripService;
@@ -225,5 +229,38 @@ class TripServiceTest {
         assertEquals(participants.size(), result.size());
         assertTrue(result.containsAll(participants));
         verify(tripRepository, times(1)).findById(tripId);
+    }
+
+    @Test
+    void testIsUserParticipantInTrip_UserIsNotParticipant() {
+        // Arrange
+        Long userId = 1L;
+        Long tripId = 1L;
+        Trip trip = new Trip();
+        trip.setId(tripId);
+        trip.setParticipants(new HashSet<>());        // Mock trip without participants
+
+        when(tripRepository.findById(tripId)).thenReturn(Optional.of(trip));
+
+        // Act
+        boolean result = tripService.isUserParticipantInTrip(userId, tripId);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    void testIsUserParticipantInTrip_TripNotFound() {
+        // Arrange
+        Long userId = 1L;
+        Long tripId = 1L;
+
+        when(tripRepository.findById(tripId)).thenReturn(Optional.empty());
+
+        // Act
+        boolean result = tripService.isUserParticipantInTrip(userId, tripId);
+
+        // Assert
+        assertFalse(result);
     }
 }

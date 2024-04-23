@@ -1,4 +1,5 @@
 package com.example.TravelMore.web;
+
 import com.example.TravelMore.Comment.Comment;
 import com.example.TravelMore.Comment.CommentService;
 import com.example.TravelMore.Image.Image;
@@ -59,7 +60,7 @@ public class MainController {
             response.addCookie(cookie);
         } else {
             model.addAttribute("error", "Invalid username/password");
-            return "register";
+            return "errorPage";
         }
         User loggedInUser = userService.getUserById(user.getId());
 
@@ -104,8 +105,11 @@ public class MainController {
                     return "main";
                 }
             }
+        } else {
+            model.addAttribute("error", "Authorization token expired. Please login!");
+            return "errorPage";
         }
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @GetMapping("/explore")
@@ -130,12 +134,17 @@ public class MainController {
 
                 return "explore";
             }
+
+        } else {
+            model.addAttribute("error", "Authorization token expired. Please login!");
+            return "errorPage";
         }
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @GetMapping("/tripcard")
-    public String tripCardPage(@RequestParam("tripId") Long tripId, @RequestParam("userId") Long userId, Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+    public String tripCardPage(@RequestParam("tripId") Long tripId, @RequestParam("userId") Long userId, Model
+            model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
         if (!authToken.isEmpty()) {
             Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
@@ -157,13 +166,17 @@ public class MainController {
                     return "tripcard";
                 }
             }
+        } else {
+            model.addAttribute("error", "Authorization token expired. Please login!");
+            return "errorPage";
         }
-        return "redirect:/index";
+        return "redirect:/";
     }
 
 
     @GetMapping("/profile/{userId}")
-    public String userProfile(@PathVariable Long userId, Model model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
+    public String userProfile(@PathVariable Long userId, Model
+            model, @CookieValue(value = "authToken", defaultValue = "") String authToken) {
         if (!authToken.isEmpty()) {
             Long authenticatedUserId = jwtTokenUtil.extractUserId(authToken);
             if (authenticatedUserId != null && jwtTokenUtil.validateToken(authToken, authenticatedUserId)) {
@@ -199,8 +212,11 @@ public class MainController {
 
                 return "profile";
             }
+        } else {
+            model.addAttribute("error", "Authorization token expired. Please login!");
+            return "errorPage";
         }
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @GetMapping("/offers")
@@ -229,11 +245,11 @@ public class MainController {
 
                 return "offers";
             }
+        } else {
+            model.addAttribute("error", "Authorization token expired. Please login!");
+            return "errorPage";
         }
-
-        return "redirect:/index";
+        return "redirect:/";
     }
 
-
 }
-

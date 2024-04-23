@@ -62,10 +62,14 @@ public class TripController {
             if (startDateString != null && !startDateString.trim().isEmpty()) {
                 startDate = dateFormat.parse(startDateString);
                 trip.setStartDate(startDate);
+            } else {
+                throw new NullPointerException("start date was not filled!");
             }
             if (endDateString != null && !endDateString.trim().isEmpty()) {
                 endDate = dateFormat.parse(endDateString);
                 trip.setEndDate(endDate);
+            } else {
+                throw new NullPointerException("end date was not filled!");
             }
 
             if (endDate != null && endDate.before(startDate)) {
@@ -89,17 +93,18 @@ public class TripController {
             }
 
             return "redirect:/main";
-        } catch (ParseException | IOException e) {
-            model.addAttribute("error", "Failed to add trip" + e.getMessage());
+        } catch (ParseException | IOException |
+                 NullPointerException e) {
+            model.addAttribute("error", "Failed to add trip: " + e.getMessage());
             return "errorPage";
         }
-    }
 
+    }
 
     @GetMapping("/{id}/update")
     public String showUpdateTripForm(@PathVariable("id") Long tripId, Model model) {
-        try{
-        Trip trip = tripService.getTripById(tripId);
+        try {
+            Trip trip = tripService.getTripById(tripId);
             model.addAttribute("trip", trip);
             return "updateTripForm";
         } catch (Exception e) {
